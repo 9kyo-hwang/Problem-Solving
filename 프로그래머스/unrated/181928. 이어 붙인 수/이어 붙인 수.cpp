@@ -4,13 +4,13 @@
 using namespace std;
 
 int solution(vector<int> num_list) {
-    string odd = "", even = "";
-    for(const auto i : num_list) {
-        if(i % 2 == 1)
-            odd += to_string(i);
-        else
-            even += to_string(i);
+    int odd = 0, even = 0;
+    for(const auto i : num_list){
+        if(i % 2 == 1) {
+            odd = odd * 10 + i;
+        } else {
+            even = even * 10 + i;
+        }
     }
-    int answer = stoi(odd) + stoi(even);
-    return answer;
+    return odd + even;
 }
