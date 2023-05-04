@@ -11,8 +11,6 @@ vector<string> solution(string myString) {
     while(getline(ss, buffer, 'x'))
         if(!buffer.empty())
             answer.emplace_back(buffer);
-    for(auto& str : answer)
-        str.erase(remove(str.begin(), str.end(), ' '), str.end());
     sort(answer.begin(), answer.end());
     return answer;
 }
