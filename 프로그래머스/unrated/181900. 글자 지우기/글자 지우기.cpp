@@ -4,13 +4,13 @@
 using namespace std;
 
 string solution(string my_string, vector<int> indices) {
-    vector<bool> flag(my_string.length(), false);
-    for(const auto &i : indices)
-        flag[i] = true;
+    for(const auto& i : indices)
+        my_string[i] = ' ';
     
     string answer = "";
-    for(int i = 0; i < my_string.length(); i++)
-        if(!flag[i])
-            answer.push_back(my_string[i]);
+    for(const auto &ch : my_string) {
+        if(ch != ' ')
+            answer.push_back(ch);
+    }
     return answer;
 }
