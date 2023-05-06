@@ -1,22 +1,19 @@
 #include <string>
 #include <vector>
-#include <regex>
+#include <iostream>
 
 using namespace std;
 
-vector<string> split(string s, string pattern = " ") {
-    regex re(pattern);
-    sregex_token_iterator it(s.begin(), s.end(), re, -1), end;
-    return vector<string>(it, end);
-}
-
 vector<string> solution(string myStr) {
-    vector<string> answer = split(myStr, R"(a|b|c)");
-    auto it = answer.begin();
-    while(it != answer.end()) {
-        if((*it).empty())
-            it = answer.erase(it);
-        else it++;
+    vector<string> answer;
+    int s = 0;
+    while(s < myStr.length()) {
+        int e = s;
+        while(myStr[e] != 'a' && myStr[e] != 'b' && myStr[e] != 'c')
+            e++;
+        if(s != e) 
+            answer.emplace_back(myStr.substr(s, e - s));
+        s = e + 1;
     }
     if(answer.empty())
         answer.emplace_back("EMPTY");
