@@ -1,41 +1,38 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iostream>
+#include <queue>
 
 using namespace std;
 
 string solution(string a, string b) {
-    reverse(a.begin(), a.end());
-    reverse(b.begin(), b.end());
+    deque<char> dq;
+    int i = a.length() - 1, j = b.length() - 1;
     
-    string answer = "";
-    int minlen = min(a.length(), b.length());
-    
-    int up = 0;
-    for(int i = 0; i < minlen; i++) {
-        int num = (a[i] - '0') + (b[i] - '0') + up;
-        answer.push_back((num % 10) + '0');
-        up = num / 10;
+    int carry = 0;
+    while(i >= 0 && j >= 0) {
+        int num = a[i] - '0' + b[j] - '0' + carry;
+        dq.push_front(num % 10 + '0');
+        carry = num / 10;
+        i--, j--;
     }
     
-    if(a.length() < b.length()) {
-        for(auto i = minlen; i < b.length(); i++) {
-            int num = (b[i] - '0') + up;
-            answer.push_back((num % 10) + '0');
-            up = num / 10;
-        }
-    } else if(a.length() > b.length()) {
-        for(auto i = minlen; i < a.length(); i++) {
-            int num = (a[i] - '0') + up;
-            answer.push_back((num % 10) + '0');
-            up = num / 10;
-        }
+    while(i >= 0) {
+        int num = a[i] - '0' + carry;
+        dq.push_front(num % 10 + '0');
+        carry = num / 10;
+        i--;
     }
     
-    if(1 <= up && up <= 9)
-        answer.push_back(up + '0');
+    while(j >= 0) {
+        int num = b[j] - '0' + carry;
+        dq.push_front(num % 10 + '0');
+        carry = num / 10;
+        j--;
+    }
     
-    reverse(answer.begin(), answer.end());
-    return answer;
+    if(carry != 0)
+        dq.push_front(carry + '0');
+
+    return string{dq.begin(), dq.end()};
 }
