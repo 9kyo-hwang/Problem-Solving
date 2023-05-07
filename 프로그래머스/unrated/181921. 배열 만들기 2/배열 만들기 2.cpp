@@ -17,8 +17,8 @@ vector<int> solution(int l, int r) {
         if(num >= l)
             answer.emplace_back(num);
         
-        q.push(num * 10 + 0);
-        q.push(num * 10 + 5);
+        q.emplace(num * 10 + 0);
+        q.emplace(num * 10 + 5);
     }
     
     if(answer.empty())
