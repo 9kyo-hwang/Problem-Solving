@@ -1,29 +1,17 @@
 #include <string>
 #include <iostream>
-#include <stack>
 
 using namespace std;
 
 bool solution(string s)
 {
-    stack<char> st;
-    bool balanced = true;
-    
+    int n = 0;
     for(const auto& c : s) {
-        if(!balanced)
-            break;
+        if(n < 0) break; // 음이 되는 경우는 발생할 수 없음(닫는 괄호가 먼저 나오거나 초과하는 경우)
         
-        if(c == '(')
-            st.emplace(c);
-        else if(c == ')') {
-            if(st.empty()) {
-                balanced = false;
-                break;
-            }
-            
-            st.pop();
-        }
+        if(c == '(') n++;
+        else if(c == ')') n--;
     }
     
-    return balanced && st.empty();
+    return n == 0;
 }
