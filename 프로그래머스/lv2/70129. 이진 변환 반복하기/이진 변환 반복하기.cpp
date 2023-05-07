@@ -5,14 +5,10 @@
 using namespace std;
 
 vector<int> solution(string s) {
-    vector<int> answer(2);
-    
     int turn = 0;
     int dist = 0;
-    while(true) {
-        if(s == "1")
-            break;
-        
+    
+    while(s != "1") {
         auto it = remove(s.begin(), s.end(), '0');
         dist += distance(it, s.end());
         s.erase(it, s.end());
@@ -24,9 +20,9 @@ vector<int> solution(string s) {
             len /= 2;
         }
         s = binary;
+        
         turn++;
     }
     
-    answer[0] = turn, answer[1] = dist;
-    return answer;
+    return {turn, dist};
 }
