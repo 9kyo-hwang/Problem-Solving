@@ -3,9 +3,6 @@
 
 using namespace std;
 
-int solution(string s) {
-    if(s[0] == '-')
-        return -1 * stoi(string(s.begin() + 1, s.end()));
-    
+int solution(string s) {  
     return stoi(s);
 }
