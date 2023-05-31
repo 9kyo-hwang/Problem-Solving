@@ -5,8 +5,6 @@ using namespace std;
 
 int solution(vector<int> nums)
 {
-    unordered_set<int> set;
-    for(const auto& i : nums)
-        set.emplace(i);
+    unordered_set<int> set(nums.begin(), nums.end());
     return min(set.size(), nums.size() / 2);
 }
