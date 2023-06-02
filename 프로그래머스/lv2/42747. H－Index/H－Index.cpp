@@ -5,14 +5,22 @@
 using namespace std;
 
 int solution(vector<int> citations) {
-    sort(citations.begin(), citations.end(), greater<int>());
+    int begin = 0, end = 10000;
     int answer = 0;
-    for(int citation = 0; citation < citations.size(); citation++) {
-        int h = citations[citation]; // 인용 횟수
-        if(h >= citation + 1) { // 인용 횟수 >= 인용된 논문 수라면 H-Index
-            answer = citation + 1;
+    while(begin <= end) {
+        int mid = (begin + end) / 2;
+        
+        int count = 0;
+        for(const auto& citation : citations) {
+            if(citation >= mid)
+                count++;
+        }
+        
+        if(count >= mid) {
+            answer = mid;
+            begin = mid + 1;
         } else {
-            break;
+            end = mid - 1;
         }
     }
     
