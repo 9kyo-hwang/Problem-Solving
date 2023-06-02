@@ -11,7 +11,7 @@ vector<int> solution(vector<int> array, vector<vector<int>> commands) {
         int j = command[1];
         int k = command[2];
         
-        auto tmp = vector<int>(&array[i - 1], &array[j]);
+        vector<int> tmp(&array[i - 1], &array[j]);
         sort(tmp.begin(), tmp.end());
         answer.emplace_back(tmp[k - 1]);
     }
