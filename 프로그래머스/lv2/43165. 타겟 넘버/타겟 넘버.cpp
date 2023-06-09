@@ -3,14 +3,14 @@
 
 using namespace std;
 
-int DFS(vector<int>& numbers, int number, int target, int index, int count) {
+int DFS(vector<int>& numbers, int number, int target, int index) {
     if(index >= numbers.size())
         return number == target;
     
-    return DFS(numbers, number + numbers[index], target, index + 1, count + 1) 
-        + DFS(numbers, number - numbers[index], target, index + 1, count + 1);
+    return DFS(numbers, number + numbers[index], target, index + 1) 
+        + DFS(numbers, number - numbers[index], target, index + 1);
 }
 
 int solution(vector<int> numbers, int target) {
-    return DFS(numbers, 0, target, 0, 0);
+    return DFS(numbers, 0, target, 0);
 }
