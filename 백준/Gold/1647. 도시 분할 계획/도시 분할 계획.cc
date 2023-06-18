@@ -66,16 +66,19 @@ int main() {
 
   sort(edges.begin(), edges.end());
 
-  int cost = 0;
-  vector<int> costs;
+  int min_cost = 0;
+  int count = 0;
   for (const auto &[dist, src, dst] : edges) {
+    if(count == N - 2) // 마을을 분리하기 위해 (마을 수 - 2)개의 길만 남김. N - 1개 선택 시 모두 연결됨
+      break;
+      
     if (uf.Union(src, dst)) {
-      cost += dist;
-      costs.emplace_back(dist);
+      min_cost += dist;
+      count += 1;
     }
   }
 
-  cout << cost - costs.back();
+  cout << min_cost;
 
   return 0;
 }
