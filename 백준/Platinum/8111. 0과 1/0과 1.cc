@@ -1,68 +1,52 @@
 #include <iostream>
 #include <string>
 #include <queue>
-#include <algorithm>
 
 using namespace std;
 
-void QueueClear(queue<pair<string, int>> &q)
-{
-	queue<pair<string, int>> empty;
-	swap(q, empty);
-}
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr), cout.tie(nullptr);
 
-int main()
-{
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr), cout.tie(nullptr);
+  int T; cin >> T;
 
-	bool visited[20001];
-	queue<pair<string, int>> q;
+  while(T--) {
+    int N; cin >> N;
 
-	int T, N;
-	cin >> T;
+    if(N == 1) {
+      cout << 1 << "\n";
+      continue;
+    }
 
-	while(T--)
-	{
-		QueueClear(q);
-        fill_n(visited, 20001, false);
+    vector<bool> visited(20001, false);
 
-		cin >> N;
+    queue<pair<string, int>> q;
+    q.emplace("1", 1);
 
-		if(N == 1)
-		{
-			cout << N << "\n";
-			continue;
-		}
+    string result = "BRAK";
 
-		string result = "BRAK";
+    while(!q.empty()) {
+      const auto [str, num] = q.front();
+      q.pop();
 
-		q.emplace("1", 1);
+      for(const int i : {0, 1}) {
+        int next = (num * 10 + i) % N;
 
-		while (!q.empty())
-		{
-			auto [str, num] = q.front();
-			q.pop();
+        if(visited[next])
+          continue;
 
-			for (int i = 0; i <= 1; i++)
-			{
-				int next = (num * 10 + i) %	N;
+        if(next == 0) {
+          result = str + to_string(i);
+          break;
+        }
 
-				if (visited[next]) continue;
+        visited[next] = true;
+        q.emplace(str + to_string(i), next);
+      }
+    }
 
-				if (next == 0)
-				{
-					result = str + to_string(i);
-					break;
-				}
+    cout << result << "\n";
+  }
 
-				visited[next] = true;
-				q.emplace(str + to_string(i), next);
-			}
-		}
-
-		cout << result << "\n";
-	}
-
-	return 0;
+  return 0;
 }
