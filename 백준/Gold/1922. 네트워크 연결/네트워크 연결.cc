@@ -8,10 +8,10 @@ using namespace std;
 class UnionFind {
  public:
   explicit UnionFind(int size) {
-    p_ = vector<int>(size + 1);
-    for(int i = 0; i <= size; i++)
+    p_ = vector<int>(size);
+    for(int i = 0; i < size; i++)
       p_[i] = i;
-    size_ = vector<int>(size + 1, 1);
+    size_ = vector<int>(size, 1);
   }
   ~UnionFind() = default;
 
