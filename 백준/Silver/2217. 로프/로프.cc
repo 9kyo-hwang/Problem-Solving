@@ -12,16 +12,20 @@ int main() {
   int N;
   cin >> N;
 
-  vector<int> ropes(N, 0);
-  for(auto &rope : ropes)
-    cin >> rope;
+  vector<int> counts(10001, 0);
+  for(int n = 0; n < N; n += 1) {
+    int w;
+    cin >> w;
 
-  sort(ropes.begin(), ropes.end());
+    counts[w] += 1;
+  }
 
   int max_weight = 0;
-  for(const auto &rope : ropes) {
-    max_weight = max(max_weight, rope * N);
-    N -= 1;
+  for(int i = 1; i <= 10000; i += 1) {
+    for(int j = 0; j < counts[i]; j += 1) {
+      max_weight = max(max_weight, i * N);
+      N -= 1;
+    }
   }
 
   cout << max_weight;
