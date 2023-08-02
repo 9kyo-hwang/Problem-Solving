@@ -13,16 +13,17 @@ int main() {
 
   int N, M;
   cin >> N >> M;
-  
-  vector<ull> times(N);
-  for(ull &i : times) {
-    cin >> i;
-  }
-  sort(times.begin(), times.end());
 
   // 가장 빨리 끝나는 경우: 1분 걸리는 심사관한테 1명
   // 가장 늦게 끝나는 경우: 가장 오래 걸리는 심사관한테 M명
-  ull min_time = 1, max_time = times.back() * M;
+  ull min_time = 1, max_time = 1;
+  vector<ull> times(N);
+  for(ull &i : times) {
+    cin >> i;
+    max_time = max(max_time, i);
+  }
+  max_time *= M;
+  
   ull answer = 0;
   while(min_time <= max_time) {
     ull avg_time = (min_time + max_time) / 2;
