@@ -24,7 +24,6 @@ int main() {
   }
   max_time *= M;
   
-  ull answer = 0;
   while(min_time <= max_time) {
     ull avg_time = (min_time + max_time) / 2;
     ull pass = 0;
@@ -36,13 +35,12 @@ int main() {
 
     if(pass >= M) { // 모두 처리할 수 있다면 최대 시간 감소
       max_time = avg_time - 1;
-      answer = avg_time;
     } else { // 불가능 하다면 최소 시간 증가
       min_time = avg_time + 1;
     }
   }
 
-  cout << answer;
+  cout << max_time + 1;
 
   return 0;
 }
