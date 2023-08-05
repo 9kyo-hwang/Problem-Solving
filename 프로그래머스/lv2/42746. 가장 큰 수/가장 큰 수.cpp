@@ -17,9 +17,5 @@ string solution(vector<int> numbers) {
     for(const auto& str : strs)
         answer += str;
     
-    for(const auto& ch : answer)
-        if(ch != '0')
-            return answer;
-    
-    return "0";
+    return answer[0] == '0' ? "0" : answer;
 }
