@@ -27,8 +27,6 @@ int main() {
     }
   }
 
-  sort(title_score.begin(), title_score.end());
-
   while (M--) {
     int score;
     cin >> score;
