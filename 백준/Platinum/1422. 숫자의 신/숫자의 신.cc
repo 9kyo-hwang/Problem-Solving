@@ -14,8 +14,13 @@ int main() {
   cin >> N >> K;
 
   vector<string> v(N);
-  for (string &str : v)
+  string repeat_num = "0";
+  for (string &str : v) {
     cin >> str;
+    if(str.length() > repeat_num.length() || str.length() == repeat_num.length() && str > repeat_num) {
+      repeat_num = str;
+    }
+  }
 
   sort(v.begin(), v.end(), [](const string &a, const string &b) {
     return a + b > b + a;
@@ -23,12 +28,6 @@ int main() {
 
   string answer;
   int repeat_cnt = K - N;
-  string repeat_num = "0";
-
-  for (const string &num : v) {
-    if (num.length() > repeat_num.length() || num.length() == repeat_num.length() && num > repeat_num)
-      repeat_num = num;
-  }
 
   bool flag = false;
   for (const string &num : v) {
