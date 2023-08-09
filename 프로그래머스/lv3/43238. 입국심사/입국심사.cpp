@@ -7,7 +7,7 @@ using ll = long long;
 
 ll solution(int n, vector<int> v) {
     vector<ll> times(v.begin(), v.end());
-    ll min_time = 1, max_time = *max_element(times.begin(), times.end()) * n;
+    ll min_time = 1, max_time = times.back() * n;
     
     ll answer = 0;
     while(min_time <= max_time) {
@@ -15,7 +15,7 @@ ll solution(int n, vector<int> v) {
         ll passed_cnt = 0;
         
         for(const ll &t : times) {
-            passed_cnt += avg_time / t;
+            passed_cnt += avg_time / (ll)t;
         }
         
         if(passed_cnt >= n) {
