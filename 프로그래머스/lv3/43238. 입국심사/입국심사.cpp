@@ -3,10 +3,9 @@
 #include <algorithm>
 
 using namespace std;
-using ll = long long;
+using ll = unsigned long long;
 
-ll solution(int n, vector<int> v) {
-    vector<ll> times(v.begin(), v.end());
+ll solution(int n, vector<int> times) {
     ll min_time = 1, max_time = times.back() * n;
     
     ll answer = 0;
@@ -15,7 +14,7 @@ ll solution(int n, vector<int> v) {
         ll passed_cnt = 0;
         
         for(const ll &t : times) {
-            passed_cnt += avg_time / (ll)t;
+            passed_cnt += avg_time / t;
         }
         
         if(passed_cnt >= n) {
