@@ -2,23 +2,22 @@
 #include <algorithm>
 
 using namespace std;
-using ll = long long;
 
 int main() {
   ios_base::sync_with_stdio(false);
   cin.tie(nullptr);
   cout.tie(nullptr);
 
-  ll N, k;
+  int N, k;
   cin >> N >> k;
 
   // B[k] = a -> a보다 작거나 같은 수가 최소 k개
 
-  ll l = 1, r = k;
-  ll answer = 0;
+  int l = 1, r = k;
+  int answer = 0;
   while(l <= r) {
-    ll m = (l + r) / 2;
-    ll count = 0;
+    int m = (l + r) / 2;
+    int count = 0;
 
     for(int i = 1; i <= N && i <= m; i += 1) {
       count += min(m / i, N);
