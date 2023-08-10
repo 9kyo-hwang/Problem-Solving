@@ -6,7 +6,7 @@ using namespace std;
 using ll = unsigned long long;
 
 ll solution(int n, vector<int> times) {
-    ll min_time = 1, max_time = times.back() * n;
+    ll min_time = 1, max_time = *max_element(times.begin(), times.end()) * n;
     
     ll answer = 0;
     while(min_time <= max_time) {
