@@ -15,7 +15,6 @@ constexpr int OFFSET[][2] = {
 
 int solution(vector<vector<int>> board) {
     int N = board.size();
-    vector<vector<vector<bool>>> visited(4, vector<vector<bool>>(N, vector<bool>(N, false)));
     vector<vector<vector<int>>> costs(4, vector<vector<int>>(N, vector<int>(N, MAX)));
     
     queue<tuple<int, int, int>> q;
