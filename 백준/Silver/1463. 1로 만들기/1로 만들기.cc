@@ -1,28 +1,46 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
-
-#define FASTIO ios_base::sync_with_stdio(false); cin.tie(nullptr); cout.tie(nullptr);
-#define INF 1e9
+#include <queue>
+#include <unordered_map>
 
 using namespace std;
 
-vector<int> dp;
-int solution(int x) {
-    if(x <= 1)
-        return 0;
-    else if(dp[x] > 0)
-        return dp[x];
-    else
-        return dp[x] = min({solution(x / 3) + x % 3 + 1, solution(x / 2) + x % 2 + 1});
-}
-
 int main() {
-    FASTIO
-        
-    int X; cin >> X;
-    dp = vector<int>(X + 1, 0);
-    cout << solution(X);
-    
-    return 0;
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr), cout.tie(nullptr);
+
+  int X;
+  cin >> X;
+
+  queue<int> q;
+  q.emplace(X);
+
+  unordered_map<int, int> map;
+  map[X] = 0;
+
+  while(!q.empty()) {
+    int x = q.front();
+    q.pop();
+
+    if(x == 1) {
+      break;
+    }
+
+    if(x % 3 == 0 && map[x / 3] == 0) {
+      map[x / 3] = map[x] + 1;
+      q.emplace(x / 3);
+    }
+
+    if(x % 2 == 0 && map[x / 2] == 0) {
+      map[x / 2] = map[x] + 1;
+      q.emplace(x / 2);
+    }
+
+    if(map[x - 1] == 0) {
+      map[x - 1] = map[x] + 1;
+      q.emplace(x - 1);
+    }
+  }
+
+  cout << map[1];
+  return 0;
 }
