@@ -9,13 +9,11 @@ int main() {
     cin.tie(nullptr), cout.tie(nullptr);
 
     int N, M, n, m;
-    vector<int> v;
-
     cin >> N;
-    while(N--) {
-        cin >> n;
-        v.emplace_back(n);
-    }
+    
+    vector<int> v(N);
+    for(int &i : v)
+        cin >> i;
 
     sort(v.begin(), v.end());
 
