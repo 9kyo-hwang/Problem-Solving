@@ -3,91 +3,82 @@
 #include <cmath>
 
 using namespace std;
-using GroupPtr = struct Group*;
 
-struct Group
-{
-	int Minimum{};
-	vector<int> Data;
+constexpr int MAX = 1'000'000'001;
+
+struct Group {
+  int m_min_num = MAX;
+  vector<int> m_v;
 };
 
-int N, M, G;
-vector<GroupPtr> v;
+int N, M, G, K;
+vector<Group> v;
 
-int RangeQuery(int i, int j)
-{
-	const int iGroup = i / M;
-	const int iIndex = i % M;
-	const int jGroup = j / M;
-	const int jIndex = j % M;
+int RangeQuery(const int i, const int j) {
+  const int i_group = i / M;
+  const int i_index = i % M;
+  const int j_group = j / M;
+  const int j_index = j % M;
 
-	int minimum = 1'000'000'001;
+  int min_num = MAX;
 
-	if(iGroup == jGroup)
-	{
-		for(int index = iIndex; index <= jIndex; index++)
-		{
-			minimum = min(minimum, v[iGroup]->Data[index]);
-		}
-		return minimum;
-	}
+  int index = i_index;
+  if (i_group == j_group) {
+    while (index <= j_index) {
+      min_num = min(min_num, v[i_group].m_v[index]);
+      index++;
+    }
+    return min_num;
+  }
 
-	for(int index = iIndex; index < M; index++)
-	{
-		minimum = min(minimum, v[iGroup]->Data[index]);
-	}
+  while (index < M) {
+    min_num = min(min_num, v[i_group].m_v[index]);
+    index++;
+  }
 
-	for(int group = iGroup + 1; group < jGroup; group++)
-	{
-		minimum = min(minimum, v[group]->Minimum);
-	}
+  int group = i_group + 1;
+  while (group < j_group) {
+    min_num = min(min_num, v[group].m_min_num);
+    group++;
+  }
 
-	for(int index = 0; index <= jIndex; index++)
-	{
-		minimum = min(minimum, v[jGroup]->Data[index]);
-	}
+  index = 0;
+  while (index <= j_index) {
+    min_num = min(min_num, v[j_group].m_v[index]);
+    index++;
+  }
 
-	return minimum;
+  return min_num;
 }
 
-int main()
-{
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr); cout.tie(nullptr);
+int main() {
+  ios_base::sync_with_stdio(false);
+  cin.tie(nullptr);
+  cout.tie(nullptr);
 
-	int Q;
-	cin >> N >> Q;
+  cin >> N >> K;
 
-	M = static_cast<int>(floor(sqrt(N)));
-	G = static_cast<int>(ceil(static_cast<double>(N) / M));
+  M = int(floor(sqrt(N)));
+  G = int(ceil(double(N) / M));
 
-	for(int i = 0; i < G; i++)
-	{
-		int n; cin >> n;
+  v = vector<Group>(G);
+  for (auto &[m_min, m_v] : v) {
+    if (N > M) m_v = vector<int>(M);
+    else m_v = vector<int>(N);
 
-		auto group = new struct Group;
-		group->Data.emplace_back(n);
-		N--;
+    for (int &i : m_v) {
+      cin >> i;
+      m_min = min(m_min, i);
+    }
 
-		int min = n;
-		for(int j = 1; j < M && N > 0; j++)
-		{
-			cin >> n;
-			group->Data.emplace_back(n);
-			N--;
+    N -= M;
+  }
 
-			if (n < min) min = n;
-		}
+  while (K--) {
+    int a, b;
+    cin >> a >> b;
+    cout << RangeQuery(a - 1, b - 1) << "\n";
+  }
 
-		group->Minimum = min;
-		v.emplace_back(group);
-	}
-
-	while(Q--)
-	{
-		int a, b; cin >> a >> b;
-		cout << RangeQuery(a - 1, b - 1) << "\n";
-	}
-
-	return 0;
+  return 0;
 }
