@@ -3,19 +3,9 @@
 #include <string>
 #include <algorithm>
 #include <tuple>
-#include <queue>
 
 using namespace std;
-
-struct Edge {
-	int town1, town2, sign, fee;
-
-	Edge(int x, int y, int z, int w) : town1(x), town2(y), sign(z), fee(w) {}
-
-	bool operator<(const Edge& obj) const {
-		return sign == obj.sign ? fee > obj.fee : sign > obj.sign;
-	}
-};
+using edge = tuple<pair<int, int>, int, int>;
 
 class WQUPC {
 public:
@@ -68,22 +58,25 @@ int main() {
 
 	int N, M;
 	cin >> N >> M;
-	
-	priority_queue<Edge> pq;
-	int x, y, z, w;
-	while (M--) {
+
+	vector<edge> edges(M);
+	for (auto& [p, z, w] : edges) {
+		auto& [x, y] = p;
 		cin >> x >> y >> z >> w;
-		pq.emplace(x, y, z, w);
 	}
+
+	sort(edges.begin(), edges.end(), [](const edge& lhs, const edge& rhs) {
+		const auto& [p1, z1, w1] = lhs;
+		const auto& [p2, z2, w2] = rhs;
+		return z1 == z2 ? w1 < w2 : z1 < z2;
+		});
 
 	WQUPC wqupc(N);
 	string num = ""; long long cost = 0;
 	int num_edge = 0;
 
-	while (!pq.empty()) {
-		auto [town1, town2, sign, fee] = pq.top();
-		pq.pop();
-
+	for (const auto& [pos, sign, fee] : edges) {
+		const auto& [town1, town2] = pos;
 		if (wqupc.unite(town1, town2)) {
 			num += to_string(sign);
 			cost += fee;
