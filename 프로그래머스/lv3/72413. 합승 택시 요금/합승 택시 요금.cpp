@@ -4,7 +4,7 @@
 
 using namespace std;
 
-constexpr int INF = 1e8;
+constexpr int INF = 2e7 + 1;
 
 int solution(int n, int s, int a, int b, vector<vector<int>> fares) {
     vector graph(n + 1, vector(n + 1, INF));
