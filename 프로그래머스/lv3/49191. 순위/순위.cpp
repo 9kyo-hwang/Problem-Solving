@@ -3,16 +3,17 @@
 
 using namespace std;
 
-constexpr int INF = 987654321;
+constexpr int INF = 5e5;
 
 int solution(int n, vector<vector<int>> results) {
     vector<vector<int>> graph(n + 1, vector<int>(n + 1, INF));
     for(int i = 1; i <= n; i++) 
         graph[i][i] = 0; // myself
     
-    for(const auto &edge : results) {
-        graph[edge[0]][edge[1]] = 1;
-        graph[edge[1]][edge[0]] = -1;
+    for(const auto &e : results) {
+        int A = e[0], B = e[1];
+        graph[A][B] = 1;
+        graph[B][A] = -1;
     }
     
     for(int k = 1; k <= n; k++) {
