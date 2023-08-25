@@ -20,13 +20,12 @@ vector<int> solution(int m, int n, vector<vector<int>> picture) {
     int max_cells = 0;
     for(int x = 0; x < m; x++) {
         for(int y = 0; y < n; y++) {
-            if(picture[x][y] == 0 || visited[x][y])
+            int c = picture[x][y];
+            int result = count_cells(picture, m, n, c, x, y);
+            if(result == 0)
                 continue;
             
-            int c = picture[x][y];
             cnt += 1;
-            
-            int result = count_cells(picture, m, n, c, x, y);
             if(result > max_cells) {
                 max_cells = result;
             }
