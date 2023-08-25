@@ -2,15 +2,16 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
-#include <set>
+#include <unordered_set>
 
 using namespace std;
 
 constexpr int INF = 1e7 + 1;
 
 vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector<int> summits) {
-    set<int> gset(gates.begin(), gates.end());
-    set<int> sset(summits.begin(), summits.end());
+    vector<bool> is_gate(n + 1, false), is_summit(n + 1, false);
+    for(const auto &g : gates) is_gate[g] = true;
+    for(const auto &s : summits) is_summit[s] = true;
     
     vector<vector<pair<int, int>>> graph(n + 1);
     for(const auto &p : paths) {
@@ -29,14 +30,14 @@ vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector
         const auto [si, src] = pq.top(); // si: source intensity
         pq.pop();
         
-        if(sset.find(src) != sset.end()) // summit can't be a source
+        if(is_summit[src]) // summit can't be a source
             continue;
         
         if(intensity[src] < si) // already calculated
             continue;
         
         for(const auto &[dst, di] : graph[src]) { // di: destination intensity
-            if(gset.find(dst) != gset.end()) // gate can't be a destination
+            if(is_gate[dst]) // gate can't be a destination
                 continue;
             
             int new_i = max(si, di);
@@ -48,12 +49,11 @@ vector<int> solution(int n, vector<vector<int>> paths, vector<int> gates, vector
     }
     
     int min_num = 0, min_i = INF;
-    for(const int summit : sset) {
-        if(intensity[summit] < min_i) {
-            min_num = summit;
-            min_i = intensity[summit];
+    for(int i = 1; i <= n; i++) {
+        if(is_summit[i] && intensity[i] < min_i) {
+            min_num = i;
+            min_i = intensity[i];
         }
-    }
-    
+    }    
     return {min_num, min_i};
 }
