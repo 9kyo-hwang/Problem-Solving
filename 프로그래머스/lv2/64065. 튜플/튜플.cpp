@@ -1,49 +1,33 @@
 #include <string>
 #include <vector>
-#include <sstream>
 #include <algorithm>
-#include <unordered_set>
+#include <unordered_map>
 
 using namespace std;
+using pii = pair<int, int>;
 
 vector<int> solution(string s) {
-    bool inside = false;
-    vector<vector<int>> v;
-    for(int i = 1; i < s.length() - 1; i++)
-    {   
-        int j = i;
-        while(s[j++] != '}');
-        
-        vector<int> inner_list;
-        string inside_str(&s[i + 1], &s[j]);
-        istringstream ss(inside_str);
-        string buffer;
-        while(getline(ss, buffer, ','))
-        {
-            int num = stoi(buffer);
-            inner_list.emplace_back(num);
-        }
-        v.push_back(inner_list);
-        
-        i = j;
-    }
+    unordered_map<int, int> map;
     
-    sort(v.begin(), v.end(), [](const vector<int> &p, const vector<int> &q) { return p.size() < q.size();});
-    
-    unordered_set<int> set;
-    vector<int> answer;
-    
-    for(const auto &r: v)
+    string tmp;
+    for(const char &c : s)
     {
-        for(const auto &c : r)
+        if('0' <= c && c <= '9') tmp += c;
+        else if(tmp.length() > 0) // 숫자가 있는 경우만 map에 추가
         {
-            if(set.find(c) == set.end())
-            {
-                set.emplace(c);
-                answer.emplace_back(c);
-            }
+            map[stoi(tmp)]++;
+            tmp.clear();
         }
     }
-
+    
+    vector<pii> v(map.begin(), map.end());
+    sort(v.begin(), v.end(), [](const pii &p, const pii &q)
+         {
+             return p.second > q.second;
+         });
+    
+    vector<int> answer;
+    for(const auto &[num, freq] : v) 
+        answer.emplace_back(num);
     return answer;
 }
