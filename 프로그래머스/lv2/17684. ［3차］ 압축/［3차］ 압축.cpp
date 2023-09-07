@@ -1,31 +1,29 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include <iostream>
 
 using namespace std;
 
 vector<int> solution(string msg) {
-    unordered_map<string, int> dictionary;
-    for(char ch = 'A'; ch <= 'Z'; ++ch)
-        dictionary[string(1, ch)] = ch - 'A' + 1;
+    unordered_map<string, int> dict;
+    for(char ch = 'A'; ch <= 'Z'; ch++)
+        dict[to_string(ch)] = ch - 'A' + 1;
     
-    vector<int> answer;
-    int begin = 0;
     int index = 27;
-    while(begin < msg.length()) {
-        string str(1, msg[begin]);
-        int end = begin + 1;
-        while(end < msg.length()) {
-            if(dictionary[str + msg[end]] == 0)
-                break;
-            str += msg[end++];
+    vector<int> answer;
+    for(int i = 0; i < msg.length(); i++)
+    {
+        string str = to_string(msg[i]);
+        int j;
+        for(j = i + 1; j < msg.length(); j++)
+        {
+            if(dict[str + msg[j]] == 0) break;
+            str += msg[j];
         }
-
-        dictionary[str + msg[end]] = index++;
-        answer.emplace_back(dictionary[str]);
-        begin = end;
+        
+        dict[str + msg[j]] = index++;
+        answer.emplace_back(dict[str]);
+        i = j - 1;
     }
-    
     return answer;
 }
