@@ -1,37 +1,39 @@
 #include <string>
 #include <vector>
-#include <list>
-#include <cstring>
+#include <queue>
+#include <algorithm>
 
 using namespace std;
 
+int solution(int cache_size, vector<string> cities)
+{
+	deque<string> cache;
+	deque<string>::iterator it;
+	int times = 0;
 
-int solution(int cache_size, vector<string> cities) {
-    list<string> cache;
-    list<string>::iterator it;
-    int answer = 0;
-    
-    for(const string &city : cities) {
-        bool is_find = false;
-        for(it = cache.begin(); it != cache.end(); ++it) {
-            if(strcasecmp(city.c_str(), (*it).c_str()) == 0) { // cache hit
-                it = cache.erase(it);
-                cache.emplace_front(city);
-                
-                is_find = true;
-                answer += 1;
-                break;
-            }
-        }
+	for (string& city : cities)
+	{
+		for_each(city.begin(), city.end(), [](char& c) {c = tolower(c); });
+		bool find = false;
+		for (it = cache.begin(); it != cache.end(); ++it)
+		{
+			if ((*it) == city)
+			{
+				times += 1;
+				find = true;
 
-        if(!is_find) { // cache miss
-            cache.emplace_front(city);
-            if(cache.size() > cache_size) {
-                cache.pop_back();
-            }
-            answer += 5;
-        }
-    }
-    
-    return answer;
+				it = cache.erase(it);
+				cache.emplace_front(city);
+				break;
+			}
+		}
+
+		if (find) continue;
+
+		cache.emplace_front(city);
+		if (cache.size() > cache_size) cache.pop_back();
+		times += 5;
+	}
+
+	return times;
 }
