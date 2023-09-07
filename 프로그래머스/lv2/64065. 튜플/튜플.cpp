@@ -1,34 +1,31 @@
 #include <string>
 #include <vector>
-#include <regex>
+#include <sstream>
 #include <algorithm>
 #include <unordered_set>
 
 using namespace std;
 
 vector<int> solution(string s) {
-    regex pattern(R"(\{(.*?)\})"); // 안쪽 중괄호 매칭
-    sregex_iterator it(s.begin(), s.end(), pattern);
-    sregex_iterator end;
-
+    bool inside = false;
     vector<vector<int>> v;
-    while(it != end)
-    {
-        string match = it->str(1);
-        if (v.empty()) // 첫 번째 match의 첫 번째 문자인 '{' 제거
-            match = match.substr(1); 
+    for(int i = 1; i < s.length() - 1; i++)
+    {   
+        int j = i;
+        while(s[j++] != '}');
         
         vector<int> inner_list;
-        size_t pos = 0;
-        while ((pos = match.find(',')) != string::npos)
+        string inside_str(&s[i + 1], &s[j]);
+        istringstream ss(inside_str);
+        string buffer;
+        while(getline(ss, buffer, ','))
         {
-            inner_list.emplace_back(stoi(match.substr(0, pos)));
-            match.erase(0, pos + 1);
+            int num = stoi(buffer);
+            inner_list.emplace_back(num);
         }
-        inner_list.emplace_back(stoi(match));
-        v.emplace_back(inner_list);
+        v.push_back(inner_list);
         
-        ++it;
+        i = j;
     }
     
     sort(v.begin(), v.end(), [](const vector<int> &p, const vector<int> &q) { return p.size() < q.size();});
