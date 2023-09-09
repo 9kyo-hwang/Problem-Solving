@@ -9,7 +9,7 @@
 
 using namespace std;
 
-tuple<pair<int, int>, int, string> parser(const string& record)
+tuple<pair<int, int>, int, char> parser(const string& record)
 {
     istringstream ss(record);
     string buffer;
@@ -24,23 +24,24 @@ tuple<pair<int, int>, int, string> parser(const string& record)
     ss >> buffer;
     string history = buffer;
     
-    return {{hour, minute}, car_number, history};
+    return {{hour, minute}, car_number, history[0]};
 }
 
 vector<int> solution(vector<int> fees, vector<string> records) {
     unordered_map<int, pair<int, int>> entrances;
     unordered_map<int, int> accumulates;
     map<int, int> prices;
+    vector<int> v(10000, -1);
     
     for(const string &record : records)
     {
         const auto &[t, c, h] = parser(record);
         
-        if(h == "IN")
+        if(h == 'I')
         {
             entrances[c] = t;
         }
-        else if(h == "OUT")
+        else if(h == 'O')
         {
             const auto [in_h, in_m] = entrances[c];
             entrances.erase(c);
@@ -59,13 +60,15 @@ vector<int> solution(vector<int> fees, vector<string> records) {
         accumulates[c] += ((23 - h) * 60 + 59) - m;
     }
     
-    int base_time = fees[0], base_fee = fees[1], unit_time = fees[2], unit_fee = fees[3];
     for(const auto &[c, t] : accumulates)
     {
-        prices[c] = base_fee + ceil(max((double)(t - base_time), 0.0) / unit_time) * unit_fee;
+        v[c] = fees[1] + ceil(max((double)(t - fees[0]), 0.0) / fees[2]) * fees[3];
     }
     
     vector<int> answer;
-    for(const auto &[c, f] : prices) answer.emplace_back(f);
+    for(const int i : v)
+    {
+        if(i != -1) answer.emplace_back(i);
+    }
     return answer;
 }
