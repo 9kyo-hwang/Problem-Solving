@@ -14,25 +14,21 @@ int solution(int cache_size, vector<string> cities)
 	for (string& city : cities)
 	{
 		for_each(city.begin(), city.end(), [](char& c) {c = tolower(c); });
-		bool find = false;
-		for (it = cache.begin(); it != cache.end(); ++it)
-		{
-			if ((*it) == city)
-			{
-				times += 1;
-				find = true;
-
-				it = cache.erase(it);
-				cache.emplace_front(city);
-				break;
-			}
-		}
-
-		if (find) continue;
-
-		cache.emplace_front(city);
-		if (cache.size() > cache_size) cache.pop_back();
-		times += 5;
+        
+        it = find(cache.begin(), cache.end(), city);
+        if(it != cache.end()) // cache hit
+        {
+            times += 1;
+            it = cache.erase(it);
+            cache.emplace_front(city);
+        }
+        else // cache miss
+        {
+            times += 5;
+            cache.emplace_front(city);
+		    if (cache.size() > cache_size) 
+                cache.pop_back();
+        }
 	}
 
 	return times;
