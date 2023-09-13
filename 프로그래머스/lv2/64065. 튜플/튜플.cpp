@@ -2,17 +2,27 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include <set>
 
 using namespace std;
-using pii = pair<int, int>;
 
-vector<int> solution(string s) {
+struct cmp 
+{
+    template <typename T>
+    bool operator()(const T& l, const T& r) const
+    {
+        return l.second > r.second;
+    }
+};
+
+vector<int> solution(string s) 
+{
     unordered_map<int, int> map;
     
     string tmp;
     for(const char &c : s)
     {
-        if('0' <= c && c <= '9') tmp += c;
+        if(isdigit(c)) tmp += c;
         else if(tmp.length() > 0) // 숫자가 있는 경우만 map에 추가
         {
             map[stoi(tmp)]++;
@@ -20,14 +30,9 @@ vector<int> solution(string s) {
         }
     }
     
-    vector<pii> v(map.begin(), map.end());
-    sort(v.begin(), v.end(), [](const pii &p, const pii &q)
-         {
-             return p.second > q.second;
-         });
-    
+    set<pair<int, int>, cmp> S(map.begin(), map.end());
     vector<int> answer;
-    for(const auto &[num, freq] : v) 
+    for(const auto &[num, freq] : S) 
         answer.emplace_back(num);
     return answer;
 }
