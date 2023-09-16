@@ -2,19 +2,19 @@
 #include <vector>
 #include <unordered_map>
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 using psi = pair<string, int>;
 
 unordered_map<string, int> map;
+vector<bool> visited;
 
-void combination(const string &str, vector<bool> &visited, int begin, int n, int r) // nCr
+void combination(const string &str, int index, int r) // nCr
 {
     if(r == 0)
     {
         string tmp;
-        for(int i = 0; i < n; i++)
+        for(int i = 0; i < str.length(); i++)
         {
             if(visited[i]) 
                 tmp += str[i];
@@ -25,10 +25,10 @@ void combination(const string &str, vector<bool> &visited, int begin, int n, int
         return;
     }
     
-    for(int i = begin; i < n; i++)
+    for(int i = index; i < str.length(); i++)
     {
         visited[i] = true;
-        combination(str, visited, i + 1, n, r - 1);
+        combination(str, i + 1, r - 1);
         visited[i] = false;
     }
 }
@@ -44,8 +44,8 @@ vector<string> solution(vector<string> orders, vector<int> courses)
             int n = order.length();
             if(n < course) continue;
 
-            vector<bool> visited(n, false);
-            combination(order, visited, 0, n, course);
+            visited.assign(n, false);
+            combination(order, 0, course);
         }
 
         if(map.empty()) continue;
