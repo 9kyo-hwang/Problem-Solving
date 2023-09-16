@@ -40,7 +40,7 @@ int get_balanced_index(const string &w)
     return index;
 }
 
-string converter(string w)
+string solution(string w) 
 {
     // 1
     if(w.empty()) return w;
@@ -50,32 +50,19 @@ string converter(string w)
     string u = w.substr(0, index);
     string v = w.substr(index);
     
-    string result;
-    if(is_correct(u)) // 3
-    {
-        // 3-1
-        result = u + converter(v);
-    }
-    else // 4
-    {
-        result += '('; // 4-1
-        result += converter(v); // 4-2
-        result += ')'; // 4-3
-        
-        // 4-4
-        u = u.substr(1, u.length() - 2); 
-        for(char &ch : u)
-        {
-            if(ch == '(') ch = ')';
-            else ch = '(';
-        }
-        
-        // 4-5
-        result += u;
-    }
-    return result;
-}
+    // 3
+    if(is_correct(u)) return u + solution(v);
 
-string solution(string p) {
-    return converter(p);
+    // 4
+    
+    // 4-4
+    u = u.substr(1, u.length() - 2); 
+    for(char &ch : u)
+    {
+        if(ch == '(') ch = ')';
+        else ch = '(';
+    }
+    
+    // 4-5(4-1 + 4-2 + 4-3 + 4-4)
+    return "(" + solution(v) + ")" + u;
 }
