@@ -1,14 +1,14 @@
 #include <string>
 #include <vector>
-#include <queue>
+#include <list>
 #include <algorithm>
 
 using namespace std;
 
 int solution(int cache_size, vector<string> cities)
 {
-	deque<string> cache;
-	deque<string>::iterator it;
+	list<string> cache;
+	list<string>::iterator it;
 	int times = 0;
 
 	for (string& city : cities)
