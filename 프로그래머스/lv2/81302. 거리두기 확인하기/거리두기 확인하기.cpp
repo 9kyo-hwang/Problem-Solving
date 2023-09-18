@@ -40,29 +40,16 @@ bool is_follow(const vector<string> &place)
                     continue;
                 
                 if(offset == 0) return false;
-                
-                if(offset == 1)
+                else if(offset == 1)
                 {
-                    switch(dir)
-                    {
-                        case 0: if(place[x - 1][y] != 'X') return false; break;
-                        case 1: if(place[x][y + 1] != 'X') return false; break;
-                        case 2: if(place[x + 1][y] != 'X') return false; break;
-                        case 3: if(place[x][y - 1] != 'X') return false; break;
-                        default: break;
-                    }
+                    int px = x + OFFSET[0][dir][0], py = y + OFFSET[0][dir][1];
+                    if(place[px][py] != 'X') return false;
                 }
-                
-                if(offset == 2)
+                else if(offset == 2)
                 {
-                    switch(dir)
-                    {
-                        case 0: if(place[x - 1][y] == 'O' || place[x][y + 1] == 'O') return false; break;
-                        case 1: if(place[x + 1][y] == 'O' || place[x][y + 1] == 'O') return false; break;
-                        case 2: if(place[x + 1][y] == 'O' || place[x][y - 1] == 'O') return false; break;
-                        case 3: if(place[x - 1][y] == 'O' || place[x][y - 1] == 'O') return false; break;
-                        default: break;
-                    }
+                    int tx1 = x + OFFSET[0][dir][0], tx2 = x + OFFSET[0][(dir + 1) % 4][0];
+                    int ty1 = y + OFFSET[0][dir][1], ty2 = y + OFFSET[0][(dir + 1) % 4][1];
+                    if(place[tx1][ty1] == 'O' || place[tx2][ty2] == 'O') return false;
                 }
             }
         }
