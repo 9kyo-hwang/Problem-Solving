@@ -33,11 +33,12 @@ vector<int> solution(vector<string> info, vector<string> query)
     {
         istringstream ss(q); string buffer;
         vector<string> v;
+        
         while (getline(ss, buffer, ' '))
             v.emplace_back(buffer);
 
         int score = stoi(v[7]);
-        int count = 0;
+        int cnt = 0;
 
         vector<int> range[4];
         if (v[0] == "-") range[0] = {0, 1, 2};
@@ -53,23 +54,13 @@ vector<int> solution(vector<string> info, vector<string> query)
         else range[3] = {cat[v[6]]};
 
         for (const auto &i : range[0]) 
-        {
             for (const auto &j : range[1]) 
-            {
                 for (const auto &k : range[2]) 
-                {
                     for (const auto &l : range[3]) 
-                    {
                         for (const auto &s : table[i][j][k][l]) 
-                        {
-                            if (s >= score) count += 1;
-                        }
-                    }
-                }
-            }
-        }
+                            if (s >= score) cnt++;
 
-        result.emplace_back(count);
+        result.emplace_back(cnt);
     }
     
     return result;
