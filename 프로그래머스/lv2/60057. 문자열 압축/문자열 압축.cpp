@@ -10,24 +10,20 @@ int solution(string s)
     int answer = s.length();
     for(int len = 1; len <= s.length() / 2; len++)
     {
-        int i = 0;
-        queue<string> q;
-        while(i < s.length())
-        {
-            q.emplace(s.substr(i, len));
-            i += len;
-        }
-        
+        deque<string> dq;
+        for(int i = 0; i < s.length(); i += len) 
+            dq.emplace_back(s.substr(i, len));
+
         string str;
-        while(!q.empty())
+        while(!dq.empty())
         {
-            string front = q.front(); q.pop();
+            string front = dq.front(); dq.pop_front();
             int cnt = 1;
             
-            while(!q.empty() && front == q.front())
+            while(!dq.empty() && front == dq.front())
             {
                 cnt += 1;
-                q.pop();
+                dq.pop_front();
             }
             
             if(cnt > 1) str += to_string(cnt);
