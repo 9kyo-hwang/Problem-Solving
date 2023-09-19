@@ -2,14 +2,6 @@
 
 using namespace std;
 
-constexpr int OFFSET[][2] = 
-{
-    {-1, 0},
-    {0, 1},
-    {1, 0},
-    {0, -1},
-};
-
 int count_cells(vector<vector<int>> &p, const int m, const int n, const int c, int x, int y) 
 {
     if(x < 0 || x >= m || y < 0 || y >= n || p[x][y] == -1) return 0;
@@ -17,16 +9,16 @@ int count_cells(vector<vector<int>> &p, const int m, const int n, const int c, i
     else 
     {
         p[x][y] = -1;
-        int cnt = 1;
-        for(auto &dir : OFFSET)
-        {
-            cnt += count_cells(p, m, n, c, x + dir[0], y + dir[1]);
-        }
-        return cnt;
+        return 1
+            + count_cells(p, m, n, c, x - 1, y)
+            + count_cells(p, m, n, c, x, y + 1)
+            + count_cells(p, m, n, c, x + 1, y)
+            + count_cells(p, m, n, c, x, y - 1);
     }
 }
 
-vector<int> solution(int m, int n, vector<vector<int>> picture) {
+vector<int> solution(int m, int n, vector<vector<int>> picture) 
+{
     int cnt = 0;
     int max_cells = 0;
     for(int x = 0; x < m; x++) 
