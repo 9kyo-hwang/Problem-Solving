@@ -2,7 +2,6 @@
 #include <vector>
 #include <unordered_map>
 #include <sstream>
-#include <iostream>
 
 using namespace std;
 
@@ -13,11 +12,11 @@ vector<string> solution(vector<string> record) {
     
     for(const string &str : record)
     {
-        istringstream ss(str);        
+        istringstream ss(str);
         ss >> mod >> id >> name;
         
         if(mod != "Leave") nicknames[id] = name;
-        if(mod == "Enter" || mod == "Leave") v.emplace_back(mod, id);
+        if(mod != "Change") v.emplace_back(mod, id);
     }
     
     vector<string> answer;
