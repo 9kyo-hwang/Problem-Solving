@@ -6,26 +6,27 @@
 using namespace std;
 using pii = pair<int, int>;
 
-constexpr int DISCOUNT_RATES[4] = {10, 20, 30, 40};
-vector<int> selected;
-vector<vector<int>> rates_arr;
+constexpr int OFF_RATES[4] = {10, 20, 30, 40};
 
-void product(const int repeat, int r = 0)
+vector<int> selected;
+vector<vector<int>> off_2d;
+
+void product(const int repeat, int index = 0)
 {
-    if(r == repeat)
+    if(index == repeat)
     {
-        rates_arr.emplace_back();
+        off_2d.emplace_back();
         for(int i = 0; i < repeat; i++)
         {
-            rates_arr.back().emplace_back(selected[i]);
+            off_2d.back().emplace_back(selected[i]);
         }
         return;
     }
     
-    for(const auto &rate : DISCOUNT_RATES)
+    for(const auto &OFF : OFF_RATES)
     {
-        selected[r] = rate;
-        product(repeat, r + 1);
+        selected[index] = OFF;
+        product(repeat, index + 1);
     }
 }
 
@@ -36,21 +37,21 @@ vector<int> solution(vector<vector<int>> users, vector<int> emoticons)
     product(repeat);
     
     vector<pii> v;
-    for(const auto &rates: rates_arr)
+    for(const auto &off_1d: off_2d)
     {
         int num_sub = 0, sales = 0;
-        for(const auto &user : users)
+        for(const auto &user: users)
         {
-            int user_rate = user[0], user_price = user[1];
+            int user_off = user[0], user_price = user[1];
             bool is_sub = false; int sum_price = 0;
             
             for(int i = 0; i < repeat; i++)
             {
-                int rate = rates[i], price = emoticons[i];
+                int off = off_1d[i], price = emoticons[i];
                 
-                if(rate >= user_rate)
+                if(off >= user_off)
                 {
-                    sum_price += (price - price * (rate / 100.0));
+                    sum_price += (price - price * (off / 100.0));
                 }
                 
                 if(sum_price >= user_price)
