@@ -11,13 +11,8 @@ class Solution {
         
         Queue<Integer> q1 = new LinkedList<>(Arrays.asList(boxedQ1));
         Queue<Integer> q2 = new LinkedList<>(Arrays.asList(boxedQ2));
-        
-        long sum1 = q1.stream()
-            .mapToInt(Integer::intValue)
-            .sum();
-        long sum2 = q2.stream()
-            .mapToInt(Integer::intValue)
-            .sum();
+        long sum1 = Arrays.stream(queue1).sum();
+        long sum2 = Arrays.stream(queue2).sum();
         
         int cycle = (q1.size() + q2.size()) * 2;
         int count = 0;
