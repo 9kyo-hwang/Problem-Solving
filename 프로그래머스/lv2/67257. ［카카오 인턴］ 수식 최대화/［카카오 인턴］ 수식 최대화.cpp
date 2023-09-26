@@ -7,16 +7,6 @@
 using namespace std;
 using ll = long long;
 
-const string operators[] = 
-{
-    "+-*",
-    "+*-",
-    "-+*",
-    "-*+",
-    "*+-",
-    "*-+",
-};
-
 ll solution(string expression) 
 {
     vector<ll> nums;
@@ -36,11 +26,12 @@ ll solution(string expression)
     nums.emplace_back(stol(tmp)); // 수식 끝 마지막 숫자 추가
     
     ll answer = 0;
-    for(const auto &ops : operators)
+    string operators = "*+-";
+    do
     {
         vector<ll> v1(nums.begin(), nums.end());
         vector<char> v2(opers.begin(), opers.end());
-        for(const auto &op : ops)
+        for(const auto &op : operators)
         {
             int i = 0;
             while(i < v2.size())
@@ -63,7 +54,7 @@ ll solution(string expression)
         }
         
         answer = max(answer, abs(v1[0]));
-    }
+    } while(next_permutation(operators.begin(), operators.end()));
     
     return answer;
 }
