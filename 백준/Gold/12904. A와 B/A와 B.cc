@@ -1,7 +1,5 @@
 #include <iostream>
 #include <string>
-#include <queue>
-#include <unordered_map>
 #include <algorithm>
 
 using namespace std;
@@ -12,36 +10,21 @@ int main() {
 	cout.tie(nullptr);
 
 	string S, T; cin >> S >> T;
-	unordered_map<string, bool> visited;
-	visited[T] = true;
 	
 	bool result = false;
-	queue<string> q;
-	q.emplace(T);
-	
-	while (!q.empty()) {
-		string front = q.front();
-		q.pop();
 
-		if (front.length() < S.length())
-			continue;
-
-		if (front == S) {
+	while (S.length() <= T.length()) {
+		if (S == T) {
 			result = true;
 			break;
 		}
-
-		if (front.back() == 'A') { // 1st
-			front.pop_back(); // pop 'A'
-		}
-		else { // 2nd
-			front.pop_back(); // pop 'B'
-			reverse(front.begin(), front.end());
-		}
-
-		if (!visited[front]) {
-			visited[front] = true;
-			q.emplace(front);
+		
+		if (T.back() == 'A') {
+			T.pop_back();
+		} 
+		else {
+			T.pop_back();
+			reverse(T.begin(), T.end());
 		}
 	}
 
