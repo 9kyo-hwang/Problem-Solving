@@ -1,39 +1,18 @@
 #include <string>
 #include <vector>
-#include <cctype>
-#include <unordered_map>
+#include <regex>
 
 using namespace std;
 
 int solution(string s) {
-    unordered_map<string, int> wordToNumber = {
-        {"zero", 0},
-        {"one", 1},
-        {"two", 2},
-        {"three", 3},
-        {"four", 4},
-        {"five", 5},
-        {"six", 6},
-        {"seven", 7},
-        {"eight", 8},
-        {"nine", 9}
+    vector<string> words = {
+        "zero", "one", "two", "three", "four",
+        "five", "six", "seven", "eight", "nine",
     };
     
-    int answer = 0;
-    
-    string tmp = "";
-    for(const char& c : s) {
-        if(isdigit(c)) {
-            answer = answer * 10 + c - '0';
-            tmp.clear();
-        } else {
-            tmp += c;
-            if(wordToNumber.find(tmp) != wordToNumber.end()) {
-                answer = answer * 10 + wordToNumber[tmp];
-                tmp.clear();
-            }
-        }
+    for(int i = 0; i <= 9; i++) {
+        s = regex_replace(s, regex(words[i]), to_string(i));
     }
     
-    return answer;
+    return stoi(s);
 }
