@@ -4,6 +4,7 @@
 #include <tuple>
 
 using namespace std;
+using edge = tuple<int, int, int>;
 
 class UnionFind {
  public:
@@ -55,20 +56,16 @@ int main() {
   int N;
   cin >> N;
 
-  vector<vector<int>> C(N, vector<int>(N, 0));
-  for (auto &r : C) {
-    for (auto &c : r) {
-      cin >> c;
-    }
-  }
-
-  vector<tuple<int, int, int>> edges;
+  vector<edge> edges;
+  int c;
   for (int i = 0; i < N; i++) {
-    for (int j = i + 1; j < N; j++) {
-      edges.emplace_back(C[i][j], i, j);
+    for (int j = 0; j < N; j++) {
+      cin >> c;
+      if (i < j) {
+        edges.emplace_back(c, i, j);
+      }
     }
   }
-  
   sort(edges.begin(), edges.end());
 
   UnionFind uf(N);
