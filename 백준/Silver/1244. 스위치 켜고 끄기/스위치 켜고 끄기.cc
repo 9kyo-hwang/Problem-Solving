@@ -11,12 +11,9 @@ int main() {
   int N;
   cin >> N;
 
-  vector<bool> v(N + 1);
+  vector<int> v(N + 1);
   for (int i = 1; i <= N; i++) {
-    int state;
-    cin >> state;
-
-    v[i] = state;
+    cin >> v[i];
   }
 
   int students; cin >> students;
@@ -26,15 +23,15 @@ int main() {
 
     if (sex == 1) {
       for (int i = num; i <= N; i += num) {
-        v[i] = !v[i];
+        v[i] ^= 1;
       }
     } else if (sex == 2) {
-      v[num] = !v[num];
+      v[num] ^= 1;
 
       int begin = num - 1, end = num + 1;
       while ((begin >= 1 && end <= N) && v[begin] == v[end]) {
-        v[begin] = !v[begin];
-        v[end] = !v[end];
+        v[begin] ^= 1;
+        v[end] ^= 1;
 
         begin--;
         end++;
