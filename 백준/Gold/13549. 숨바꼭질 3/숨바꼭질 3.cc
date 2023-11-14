@@ -13,7 +13,7 @@ int main() {
   deque<int> dq;
   dq.emplace_back(N);
 
-  vector<int> dist(100001, 987654321);
+  vector<int> dist(100001, 1e6);
   dist[N] = 0;
 
   int answer = 0;
