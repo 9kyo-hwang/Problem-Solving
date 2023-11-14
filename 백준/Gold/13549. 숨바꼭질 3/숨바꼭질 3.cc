@@ -1,7 +1,23 @@
 #include <iostream>
-#include <queue>
+#include <algorithm>
 
 using namespace std;
+
+int DFS(int N, int K) {
+  if (K <= N) {
+    return N - K;
+  }
+
+  if (K == 1) {
+    return 1;
+  }
+
+  if (K % 2 == 1) {
+    return 1 + min(DFS(N, K - 1), DFS(N, K + 1));
+  }
+
+  return min(K - N, DFS(N, K / 2));
+}
 
 int main() {
   ios_base::sync_with_stdio(false);
@@ -10,38 +26,7 @@ int main() {
   int N, K;
   cin >> N >> K;
 
-  deque<int> dq;
-  dq.emplace_back(N);
+  cout << DFS(N, K);
 
-  vector<int> dist(100001, 1e6);
-  dist[N] = 0;
-
-  int answer = 0;
-  while (!dq.empty()) {
-    int cur = dq.front();
-    dq.pop_front();
-
-    if (cur == K) {
-      answer = dist[cur];
-      break;
-    }
-
-    if (cur * 2 <= 100000 && dist[cur] < dist[cur * 2]) {
-      dist[cur * 2] = dist[cur];
-      dq.emplace_front(cur * 2);
-    }
-
-    if (cur - 1 >= 0 && dist[cur] + 1 < dist[cur - 1]) {
-      dist[cur - 1] = dist[cur] + 1;
-      dq.emplace_back(cur - 1);
-    }
-
-    if (cur + 1 <= 100000 && dist[cur] + 1 < dist[cur + 1]) {
-      dist[cur + 1] = dist[cur] + 1;
-      dq.emplace_back(cur + 1);
-    }
-  }
-
-  cout << answer;
   return 0;
 }
