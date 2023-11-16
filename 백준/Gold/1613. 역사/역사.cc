@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 
-constexpr auto INF = 1e9;
-
 using namespace std;
 
 int main() { 
@@ -10,9 +8,8 @@ int main() {
   cin.tie(nullptr), cout.tie(nullptr);
 
   int N, K; cin >> N >> K;
-  vector<vector<int>> arr(N + 1, vector<int>(N + 1, INF));
-  for (int i = 1; i <= N; i++) arr[i][i] = 0;
-
+  vector<vector<int>> arr(N + 1, vector<int>(N + 1, 0));
+ 
   for (int i = 1; i <= K; i++) {
     int a, b;
     cin >> a >> b;
@@ -37,10 +34,7 @@ int main() {
     int a, b;
     cin >> a >> b;
 
-    if (arr[a][b] == INF)
-      cout << 0 << "\n";
-    else
-      cout << arr[a][b] << "\n";
+    cout << arr[a][b] << "\n";
   }
 
   return 0; 
