@@ -17,16 +17,9 @@ int main() {
 
   if (min_set > min_each * 6) {
     printf("%d", min_each * N);
-    return 0;
-  }
-
-  int answer = min_set * (N / 6);
-  if (min_each * (N % 6) > min_set) {
-    answer += min_set;
   } else {
-    answer += min_each * (N % 6);
+    printf("%d", min_set * (N / 6) + MIN(min_set, min_each * (N % 6)));
   }
-  printf("%d", answer);
 
   return 0;
 }
