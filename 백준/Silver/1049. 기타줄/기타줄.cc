@@ -1,38 +1,32 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <cstdio>
 
-using namespace std;
-using pii = pair<int, int>;
+#define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 int main() { 
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-  cout.tie(nullptr);
-
   int N, M;
-  cin >> N >> M;
+  scanf("%d %d", &N, &M);
 
-  vector<int> set(M), each(M);
+  int min_set = 1001, min_each = 1001;
   for (int i = 0; i < M; i++) {
-    cin >> set[i] >> each[i];
+    int set, each;
+    scanf(" %d %d", &set, &each);
+
+    min_set = MIN(min_set, set);
+    min_each = MIN(min_each, each);
   }
 
-  sort(set.begin(), set.end());
-  sort(each.begin(), each.end());
-
-  if (set.front() > each.front() * 6) {
-    cout << each.front() * N;
+  if (min_set > min_each * 6) {
+    printf("%d", min_each * N);
     return 0;
   }
 
-  int answer = set.front() * (N / 6);
-  if (each.front() * (N % 6) > set.front()) {
-    answer += set.front();
+  int answer = min_set * (N / 6);
+  if (min_each * (N % 6) > min_set) {
+    answer += min_set;
   } else {
-    answer += each.front() * (N % 6);
+    answer += min_each * (N % 6);
   }
-  cout << answer;
+  printf("%d", answer);
 
   return 0;
 }
