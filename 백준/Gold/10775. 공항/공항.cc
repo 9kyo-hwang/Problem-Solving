@@ -1,41 +1,36 @@
-#include <iostream>
-#include <unordered_map>
+#include <cstdio>
 
-using namespace std;
-
-unordered_map<int, int> map;
+int parent[100001];
 
 int find(int x) {
-  if (map.find(x) == map.end()) {
+  if (parent[x] == x) {
     return x;
   }
 
-  return map[x] = find(map[x]);
+  return parent[x] = find(parent[x]);
 }
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr), cout.tie(nullptr);
-
-  int G;
-  cin >> G;
-
-  int P;
-  cin >> P;
+  int G, P;
+  scanf(" %d %d", &G, &P);
+  
+  for (int i = 0; i <= G; i++) {
+    parent[i] = i;
+  }
 
   int i;
   for (i = 0; i < P; i++) {
-    int gi;
-    cin >> gi;
+    int g;
+    scanf(" %d", &g);
 
-    int p = find(gi);
+    int p = find(g);
     if (p == 0) {
       break;
     }
 
-    map[p] = p - 1;
+    parent[p] = p - 1;
   }
 
-  cout << i;
+  printf("%d\n", i);
   return 0;
 }
