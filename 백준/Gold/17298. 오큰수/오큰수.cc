@@ -14,7 +14,8 @@ int main() {
   vector<int> NGE(N);
   for (int &i : NGE) cin >> i;
 
-  vector<int> stack, answer;
+  vector<int> stack, answer(N);
+  int index = 0;
   for (auto it = NGE.rbegin(); it != NGE.rend(); ++it) {
     while (!stack.empty() && *it >= stack.back()) {
       stack.pop_back();
@@ -22,16 +23,16 @@ int main() {
 
 
     if (stack.empty()) {
-      answer.emplace_back(-1);
+      answer[index++] = -1;
     } else {
-      answer.emplace_back(stack.back());
+      answer[index++] = stack.back();
     }
 
     stack.emplace_back(*it);
   }
 
-  for (auto it = answer.rbegin(); it != answer.rend(); ++it) {
-    cout << *it << " ";
+  for (int i = index - 1; i >= 0; i--) {
+    cout << answer[i] << " ";
   }
 
   return 0;
