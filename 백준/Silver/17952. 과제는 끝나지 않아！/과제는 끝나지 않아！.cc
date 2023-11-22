@@ -21,14 +21,10 @@ int main() {
     if (n == 0) {
       if (stack.empty()) continue;
 
-      auto [a, t] = stack.back();
-      stack.pop_back();
-      t -= 1;
-
-      if (t == 0) {
-        score += a;
-      } else {
-        stack.emplace_back(a, t);
+      stack.back().second -= 1;
+      if (stack.back().second == 0) {
+        score += stack.back().first;
+        stack.pop_back();
       }
     } else if (n == 1) {
       int A, T;
