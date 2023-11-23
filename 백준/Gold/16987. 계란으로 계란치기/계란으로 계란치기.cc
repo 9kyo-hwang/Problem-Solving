@@ -11,34 +11,29 @@ using Egg = pair<int,int>;  // S, W
 int N;
 vector<Egg> eggs;
 
-int answer = 0;
-void backtracking(int index = 0) {
-  if (index > N) return;
+int backtracking(int current = 0, int broken = 0) {
+  if (current == N) {  // 3. 최근에 든 계란이 가장 오른쪽 계란이었다면
+    return broken;
+  }
 
-  for (int i = 0; i < N; i++) {
-    if (index == i || eggs[i].S <= 0) continue;
-
-    if (eggs[index].first <= 0) {
-      backtracking(index + 1);
-    } else {
-      eggs[index].S -= eggs[i].W;
-      eggs[i].S -= eggs[index].W;
-
-      backtracking(index + 1);
-
-      eggs[index].S += eggs[i].W;
-      eggs[i].S += eggs[index].W;
-    }
+  if (eggs[current].S <= 0 || broken == N - 1) {  // 2. 손에 든 계란이 깨졌거나 모든 계란이 깨졌다면
+    return backtracking(current + 1, broken);
   }
 
   int count = 0;
-  for (int i = 0; i < N; i++) {
-    if (eggs[i].S <= 0) {
-      count += 1;
-    }
+  for (int next = 0; next < N; next++) {  // 
+    if (current == next || eggs[next].S <= 0) continue;
+
+    eggs[current].S -= eggs[next].W;
+    eggs[next].S -= eggs[current].W;
+
+    count = max(count, backtracking(current + 1, broken + (eggs[current].S <= 0) + (eggs[next].S <= 0)));
+
+    eggs[current].S += eggs[next].W;
+    eggs[next].S += eggs[current].W;
   }
 
-  answer = max(answer, count);
+  return count;
 }
 
 int main() {
@@ -51,8 +46,7 @@ int main() {
   
   for (auto &[S, W] : eggs) cin >> S >> W;
 
-  backtracking();
-  cout << answer;
+  cout << backtracking();
 
   return 0;
 }
