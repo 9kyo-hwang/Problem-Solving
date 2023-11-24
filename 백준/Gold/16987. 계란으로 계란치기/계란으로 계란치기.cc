@@ -1,52 +1,46 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
-using namespace std;
-using Egg = pair<int,int>;  // S, W
-
-#define S first
-#define W second
+#include <cstdio>
 
 int N;
-vector<Egg> eggs;
+int eggs[8][2];
 
 int backtracking(int current = 0, int broken = 0) {
-  if (current == N) {  // 3. 최근에 든 계란이 가장 오른쪽 계란이었다면
+  if (current == N) {
     return broken;
-  }
-
-  if (eggs[current].S <= 0 || broken == N - 1) {  // 2. 손에 든 계란이 깨졌거나 모든 계란이 깨졌다면
+  } else if (eggs[current][0] <= 0 || broken == N - 1) {
     return backtracking(current + 1, broken);
+  } else {
+    int count = 0;
+    for (int next = 0; next < N; next++) {
+      if (current == next || eggs[next][0] <= 0) {
+        continue;
+      }
+
+      eggs[current][0] -= eggs[next][1];
+      eggs[next][0] -= eggs[current][1];
+      
+      int ret = backtracking(
+          current + 1, 
+          broken + (eggs[current][0] <= 0) + (eggs[next][0] <= 0)
+      );
+
+      if (ret > count) {
+        count = ret;
+      }
+
+      eggs[current][0] += eggs[next][1];
+      eggs[next][0] += eggs[current][1];
+    }
+    return count;
   }
-
-  int count = 0;
-  for (int next = 0; next < N; next++) {  // 
-    if (current == next || eggs[next].S <= 0) continue;
-
-    eggs[current].S -= eggs[next].W;
-    eggs[next].S -= eggs[current].W;
-
-    count = max(count, backtracking(current + 1, broken + (eggs[current].S <= 0) + (eggs[next].S <= 0)));
-
-    eggs[current].S += eggs[next].W;
-    eggs[next].S += eggs[current].W;
-  }
-
-  return count;
 }
 
 int main() {
-  ios::sync_with_stdio(false);
-  cin.tie(nullptr);
-  cout.tie(nullptr);
+  scanf(" %d", &N);
 
-  cin >> N;
-  eggs.resize(N);
-  
-  for (auto &[S, W] : eggs) cin >> S >> W;
+  for (int i = 0; i < N; i++) {
+    scanf(" %d %d", &eggs[i][0], &eggs[i][1]);
+  }
 
-  cout << backtracking();
-
+  printf("%d", backtracking());
   return 0;
 }
