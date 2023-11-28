@@ -9,8 +9,8 @@ for _ in range(T):
     K: int = int(input())
     
     alpha_indices = defaultdict(list)
-    for i in range(len(W)):
-        alpha_indices[W[i]].append(i)
+    for i, ch in enumerate(W):
+        alpha_indices[ch].append(i)
     
     minlen: int = 10001
     maxlen: int = 0
@@ -28,7 +28,4 @@ for _ in range(T):
             l += 1
             r += 1
     
-    if minlen == 10001:
-        print(-1)
-    else:
-        print(minlen, maxlen)
+    print(-1 if minlen == 10001 else f"{minlen} {maxlen}")
