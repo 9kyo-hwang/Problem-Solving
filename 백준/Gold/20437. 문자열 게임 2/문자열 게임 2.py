@@ -1,4 +1,4 @@
-from collections import Counter
+from collections import defaultdict
 
 input = open(0).readline
 
@@ -8,25 +8,27 @@ for _ in range(T):
     W: str = input()
     K: int = int(input())
     
-    alpha_dict = Counter(W[:-1])
+    alpha_indices = defaultdict(list)
+    for i in range(len(W)):
+        alpha_indices[W[i]].append(i)
+    
     minlen: int = 10001
     maxlen: int = 0
-    
-    for left in range(len(W)):
-        if alpha_dict[W[left]] < K:
+    for indices in alpha_indices.values():
+        if len(indices) < K:
             continue
         
-        sublen: int = 0
-        for right in range(left, len(W)):
-            if W[left] == W[right]:
-                sublen += 1
+        l: int = 0
+        r: int = K - 1
+        while r < len(indices):
+            strlen: int = indices[r] - indices[l] + 1
+            minlen = min(minlen, strlen)
+            maxlen = max(maxlen, strlen)
             
-            if sublen == K:
-                minlen = min(minlen, right - left + 1)
-                maxlen = max(maxlen, right - left + 1)
-                break
+            l += 1
+            r += 1
     
-    if minlen == 10001 or maxlen == 0:
+    if minlen == 10001:
         print(-1)
     else:
         print(minlen, maxlen)
