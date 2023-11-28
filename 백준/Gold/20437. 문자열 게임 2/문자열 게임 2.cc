@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <unordered_map>
 
 using namespace std;
 
@@ -12,45 +13,36 @@ int main() {
   int T;
   cin >> T;
 
-  vector<int> counts;
+  unordered_map<char, vector<int>> alpha_indices;
 
   while (T--) {
     string W;
     int K;
     cin >> W >> K;
 
-    int strlen = W.length();
+    alpha_indices.clear();
 
-    counts.assign(26, 0);
-    for (const char &ch : W) {
-      counts[ch - 'a'] += 1;
+    for (int i = 0; i < W.length(); i++) {
+      alpha_indices[W[i]].emplace_back(i);
     }
 
     int minlen = 10001, maxlen = 0;
-    for (int l = 0; l < strlen; l++) {
-      if (counts[W[l] - 'a'] < K) {
+    for (const auto &[alpha, indices] : alpha_indices) {
+      if (indices.size() < K) {
         continue;
       }
 
-      int sublen = 0;
-      for (int r = l; r < strlen; r++) {
-        if (W[l] == W[r]) {
-          sublen += 1;
-        }
-
-        if (sublen == K) {
-          minlen = min(minlen, r - l + 1);
-          maxlen = max(maxlen, r - l + 1);
-          break;
-        }
+      for (int l = 0, r = K - 1; r < indices.size(); l++, r++) {
+        int len = indices[r] - indices[l] + 1;
+        minlen = min(minlen, len);
+        maxlen = max(maxlen, len);
       }
     }
 
-    if (minlen == 10001 || maxlen == 0) {
+    if (minlen == 10001)
       cout << -1 << "\n";
-    } else {
-    cout << minlen << " " << maxlen << "\n";
-    }
+    else
+      cout << minlen << " " << maxlen << "\n";
   }
 
   return 0;
