@@ -6,20 +6,18 @@
 using namespace std;
 
 int solution(vector<int> stones, int k) {
-    multiset<pair<int, int>> ms;
+    multiset<int> ms;
     for(int i = 0; i < k; i++) {
-        ms.emplace(stones[i], i);
+        ms.emplace(stones[i]);
     }
     
-    const auto [count, index]= *(--ms.end());
-    int answer = count;
+    int answer = *(--ms.end());
     
     for(int i = 0, j = k; j < stones.size(); i++, j++) {
-        ms.erase(ms.find({stones[i], i}));
-        ms.emplace(stones[j], j);
+        ms.erase(ms.find(stones[i]));
+        ms.emplace(stones[j]);
         
-        const auto [count, index] = *(--ms.end());
-        answer = min(answer, count);
+        answer = min(answer, *(--ms.end()));
     }
     
     return answer;
