@@ -1,29 +1,18 @@
-from collections import defaultdict, deque
-
 input = open(0).readline
 
-deq = deque()
-counts = defaultdict(int)
-
 X = int(input())
+dp = {1: 0}
 
-deq.append(X)
-counts[X] = 0
-
-while deq:
-    x = deq.popleft()
+def memoization(x):
+    if x <= 1: return 0
     
-    if x == 1:
-        break
+    if x in dp.keys(): return dp[x]
     
-    if x % 3 == 0 and counts[x // 3] == 0:
-        counts[x // 3] = counts[x] + 1
-        deq.append(x // 3)
-    if x % 2 == 0 and counts[x // 2] == 0:
-        counts[x // 2] = counts[x] + 1
-        deq.append(x // 2)
-    if counts[x - 1] == 0:
-        counts[x - 1] = counts[x] + 1
-        deq.append(x - 1)
-        
-print(counts[1])
+    if (x % 3 == 0) and (x % 2 == 0): dp[x] = min(memoization(x // 3), memoization(x // 2)) + 1
+    elif x % 3 == 0: dp[x] = min(memoization(x // 3), memoization(x - 1)) + 1
+    elif x % 2 == 0: dp[x] = min(memoization(x // 2), memoization(x - 1)) + 1
+    else: dp[x] = memoization(x - 1) + 1
+    
+    return dp[x]
+    
+print(memoization(X))
