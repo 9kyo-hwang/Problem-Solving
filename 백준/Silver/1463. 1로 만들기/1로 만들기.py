@@ -1,11 +1,29 @@
+from collections import defaultdict, deque
+
 input = open(0).readline
 
-X: int = int(input())
-dp: list = [0] * (X + 1)
+deq = deque()
+counts = defaultdict(int)
 
-for i in range(2, X + 1):
-    dp[i] = dp[i - 1] + 1
-    if i % 2 == 0: dp[i] = min(dp[i], dp[i // 2] + 1)
-    if i % 3 == 0: dp[i] = min(dp[i], dp[i // 3] + 1)
+X = int(input())
+
+deq.append(X)
+counts[X] = 0
+
+while deq:
+    x = deq.popleft()
     
-print(dp[X])
+    if x == 1:
+        break
+    
+    if x % 3 == 0 and counts[x // 3] == 0:
+        counts[x // 3] = counts[x] + 1
+        deq.append(x // 3)
+    if x % 2 == 0 and counts[x // 2] == 0:
+        counts[x // 2] = counts[x] + 1
+        deq.append(x // 2)
+    if counts[x - 1] == 0:
+        counts[x - 1] = counts[x] + 1
+        deq.append(x - 1)
+        
+print(counts[1])
