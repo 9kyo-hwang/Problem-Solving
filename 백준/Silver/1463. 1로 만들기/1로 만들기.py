@@ -1,18 +1,11 @@
 input = open(0).readline
 
-X = int(input())
-dp = {1: 0}
+X: int = int(input())
+dp: list = [0] * (X + 1)
 
-def memoization(x):
-    if x <= 1: return 0
+for i in range(2, X + 1):
+    dp[i] = dp[i - 1] + 1
+    if i % 2 == 0: dp[i] = min(dp[i], dp[i // 2] + 1)
+    if i % 3 == 0: dp[i] = min(dp[i], dp[i // 3] + 1)
     
-    if x in dp.keys(): return dp[x]
-    
-    if (x % 3 == 0) and (x % 2 == 0): dp[x] = min(memoization(x // 3), memoization(x // 2)) + 1
-    elif x % 3 == 0: dp[x] = min(memoization(x // 3), memoization(x - 1)) + 1
-    elif x % 2 == 0: dp[x] = min(memoization(x // 2), memoization(x - 1)) + 1
-    else: dp[x] = memoization(x - 1) + 1
-    
-    return dp[x]
-    
-print(memoization(X))
+print(dp[X])
