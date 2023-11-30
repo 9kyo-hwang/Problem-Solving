@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <set>
 
 #define X first
 #define Y second
@@ -25,11 +26,14 @@ int main() {
       {0, 1}, {1, 1},  {1, 0},   {1, -1},
   };  // {0, 0}은 더미 역할
 
-  auto simulation = [&](int d, int s, vector<pair<int, int>> clouds) {
+  auto simulation = [&](int d, int s,
+                        set<pair<int, int>> clouds) {
     // 1. move cloud
     const auto &[dx, dy] = OFFSET[d];
-    while (s--) {
-      for (auto &[x, y] : clouds) {
+    set<pair<int, int>> moved_clouds;
+    for (const auto &pos : clouds) {
+      int x = pos.X, y = pos.Y;
+      for (int i = 0; i < s; i++) {
         x += dx, y += dy;
 
         if (x < 0) {
@@ -44,16 +48,17 @@ int main() {
           y = 0;
         }
       }
+      moved_clouds.emplace(x, y);
     }
 
     // 2. rain
-    for (const auto &[x, y] : clouds) {
+    for (const auto &[x, y] : moved_clouds) {
       A[x][y] += 1;
     }
 
     // 4. water copy bug
     for (int i : {2, 4, 6, 8}) {
-      for (const auto &[x, y] : clouds) {
+      for (const auto &[x, y] : moved_clouds) {
         int nx = x + OFFSET[i].X, ny = y + OFFSET[i].Y;
         if (nx < 0 || nx >= N || ny < 0 || ny >= N || A[nx][ny] == 0) {
           continue;
@@ -64,26 +69,14 @@ int main() {
     }
 
     // 5. make cloud
-    vector<pair<int, int>> new_clouds;
+    set<pair<int, int>> new_clouds;
     for (int i = 0; i < N; i++) {
       for (int j = 0; j < N; j++) {
-        if (A[i][j] < 2) {
+        if (A[i][j] < 2 || moved_clouds.find({i, j}) != moved_clouds.end()) {
           continue;
         }
 
-        bool flag = false;
-        for (const auto &[x, y] : clouds) {
-          if (i == x && j == y) {
-            flag = true;
-            break;
-          }
-        }
-
-        if (flag) {
-          continue;
-        }
-
-        new_clouds.emplace_back(i, j);
+        new_clouds.emplace(i, j);
         A[i][j] -= 2;
         if (A[i][j] < 0) {
           A[i][j] = 0;
@@ -94,7 +87,9 @@ int main() {
     return new_clouds;
   };
 
-  vector<pair<int, int>> clouds = {{N - 1, 0}, {N - 1, 1}, {N - 2, 0}, {N - 2, 1}};
+  set<pair<int, int>> clouds = {
+      {N - 1, 0}, {N - 1, 1}, {N - 2, 0}, {N - 2, 1}};
+
   while (M--) {
     int d, s;
     cin >> d >> s;
