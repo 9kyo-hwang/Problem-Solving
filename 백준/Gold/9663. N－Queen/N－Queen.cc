@@ -6,7 +6,7 @@ using namespace std;
 int N;
 vector<int> cols;
 
-bool promising(int level) {
+inline bool promising(int level) {
   for (int i = 1; i <= level - 1; i++) {
     if (cols[i] == cols[level]) {
       return false;
