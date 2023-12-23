@@ -1,10 +1,9 @@
-#include <iostream>
-#include <vector>
+#include <cstdio>
 
-using namespace std;
+#define MAX 30
 
 int N, M;
-vector<vector<int>> SP1, SP2;
+int SP1[MAX][MAX], SP2[MAX][MAX];
 
 bool is_correct_vaccine() {
   for (int i = 0; i < N; i++) {
@@ -31,24 +30,18 @@ void flood_fill(const int from, const int to, int x, int y) {
 }
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-
-  cin >> N >> M;
-
-  SP1.assign(N, vector(M, 0));
-  SP2.assign(N, vector(M, 0));
+  scanf(" %d %d", &N, &M);
 
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < M; j++) {
-      cin >> SP1[i][j];
+      scanf(" %d", &SP1[i][j]);
     }
   }
 
-  int x, y, from, to;
+  int x = -1, y = -1, from = 0, to = 0;
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < M; j++) {
-      cin >> SP2[i][j];
+      scanf(" %d", &SP2[i][j]);
 
       if (SP1[i][j] != SP2[i][j]) {
         x = i;
@@ -60,11 +53,14 @@ int main() {
     }
   }
 
-  flood_fill(from, to, x, y);
-  if (is_correct_vaccine()) {
-    cout << "YES";
+  if (x != -1) {
+    flood_fill(from, to, x, y);
+  }
+  
+  if (x == -1 || is_correct_vaccine()) {
+    printf("YES");
   } else {
-    cout << "NO";
+    printf("NO");
   }
 
   return 0;
