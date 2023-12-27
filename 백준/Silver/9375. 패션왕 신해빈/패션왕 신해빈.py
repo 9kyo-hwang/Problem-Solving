@@ -5,7 +5,7 @@ input = open(0).readline
 for _ in range(int(input())): 
     d = defaultdict(int)
     for _ in range(int(input())):
-        cloth, kind = input().split()
+        _, kind = input().split()
         d[kind] += 1
         
     case = 1
