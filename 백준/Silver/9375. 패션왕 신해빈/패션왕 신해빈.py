@@ -2,18 +2,14 @@ from collections import defaultdict
 
 input = open(0).readline
 
-t = int(input())
-
-for _ in range(t):
-    n = int(input())
-    
+for _ in range(int(input())): 
     d = defaultdict(int)
-    for _ in range(n):
-        cloth, category = input().split()
-        d[category] += 1
+    for _ in range(int(input())):
+        cloth, kind = input().split()
+        d[kind] += 1
         
     case = 1
-    for key, value in d.items():
+    for value in d.values():
         case *= (value + 1)
     
     print(case - 1)
