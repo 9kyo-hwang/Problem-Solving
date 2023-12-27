@@ -1,12 +1,13 @@
-from collections import defaultdict
-
 input = open(0).readline
 
 for _ in range(int(input())): 
-    d = defaultdict(int)
+    d = {}
     for _ in range(int(input())):
         _, kind = input().split()
-        d[kind] += 1
+        if kind not in d:
+            d[kind] = 1
+        else:
+            d[kind] += 1
         
     case = 1
     for value in d.values():
