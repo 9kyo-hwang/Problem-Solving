@@ -13,7 +13,7 @@ using namespace std;
 // minimum f -> minimum g
 using Node = tuple<int, int, string>;
 
-const string &target = "123456780";
+const string &target = "12345678#";
 const vector<pair<int, int>> offset = {
     {-1, 0},
     {0, 1},
@@ -42,7 +42,7 @@ int astar(const string &board) {
       return -1;
     }
 
-    int pos = current.find('0');
+    int pos = current.find('#');
     int x = pos / 3, y = pos % 3;
 
     for (const auto &[dx, dy] : offset) {
@@ -90,8 +90,6 @@ int main() {
       board += buffer;
     }
     cin.ignore();
-    
-    board.replace(board.find('#'), 1, "0");
 
     int result = astar(board);
     if (result == -1) {
