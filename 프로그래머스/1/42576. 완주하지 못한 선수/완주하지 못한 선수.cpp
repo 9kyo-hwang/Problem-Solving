@@ -1,16 +1,25 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include <iterator>
+#include <unordered_map>
 
 using namespace std;
 
 string solution(vector<string> participant, vector<string> completion) {
-    sort(participant.begin(), participant.end());
-    sort(completion.begin(), completion.end());
+    unordered_map<string, int> pmap, cmap;
+    for(const auto &str : participant) {
+        pmap[str] += 1;
+    }
+    for(const auto &str : completion) {
+        cmap[str] += 1;
+    }
     
-    vector<string> answer;
-    set_difference(participant.begin(), participant.end(), completion.begin(), completion.end(), back_inserter(answer));
-    
-    return answer[0];
+    string answer = "";
+    for(const auto &[k, v] : pmap) {
+        if(cmap.find(k) == cmap.end() || cmap[k] - v != 0) {
+            answer = k;
+            break;
+        }
+    }
+    return answer;
 }
