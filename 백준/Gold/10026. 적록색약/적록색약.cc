@@ -49,23 +49,15 @@ int main() {
 
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {
-      if (grid1[i][j] == 'A') {
-        continue;
+      if (grid1[i][j] != 'A') {
+        dfs(grid1, i, j, grid1[i][j]);
+        count1 += 1;
       }
 
-      dfs(grid1, i, j, grid1[i][j]);
-      count1 += 1;
-    }
-  }
-
-  for (int i = 0; i < N; i++) {
-    for (int j = 0; j < N; j++) {
-      if (grid2[i][j] == 'A') {
-        continue;
+      if (grid2[i][j] != 'A') {
+        dfs(grid2, i, j, grid2[i][j]);
+        count2 += 1;
       }
-
-      dfs(grid2, i, j, grid2[i][j]);
-      count2 += 1;
     }
   }
 
