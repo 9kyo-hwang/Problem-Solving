@@ -22,12 +22,17 @@ for i, r in enumerate(lake):
             
 
 parents = [i for i in range(R * C)]
+rank = [0] * (R * C)
 
 offset = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
 
-out_of_bound = lambda x, y: x < 0 or x >= R or y < 0 or y >= C
-convert_coord = lambda x, y: x * C + y
+def out_of_bound(x, y):
+    return x < 0 or x >= R or y < 0 or y >= C
+
+
+def convert_coord(x, y):
+    return x * C + y
 
 
 def find(x):
@@ -38,13 +43,14 @@ def find(x):
 
 
 def union(x, y):
-    x = find(x)
-    y = find(y)
+    root_x, root_y = find(x), find(y)
     
-    if x < y:
-        parents[y] = x
-    elif x > y:
-        parents[x] = y
+    if rank[root_x] > rank[root_y]:
+        parents[root_y] = root_x
+        rank[root_x] += rank[root_y]
+    else:
+        parents[root_x] = root_y
+        rank[root_y] += rank[root_x]
 
 
 days = 0
