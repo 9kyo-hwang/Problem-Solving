@@ -1,38 +1,41 @@
-#include <iostream>
-#include <vector>
+#include <cstdio>
 #include <algorithm>
+#include <cstring>
 
 using namespace std;
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
- 
   int N;
-  cin >> N;
+  scanf(" %d", &N);
 
-  vector max_dp(3, 0), min_dp(3, 0);
-
-  for (int i = 0; i < N; i++) {
-    int a, b, c;
-    cin >> a >> b >> c;
-
-    vector max_tmp(3, 0), min_tmp(3, 0);
-
-    max_tmp[0] = a + max(max_dp[0], max_dp[1]);
-    max_tmp[1] = b + max({max_dp[0], max_dp[1], max_dp[2]});
-    max_tmp[2] = c + max(max_dp[1], max_dp[2]);
-
-    min_tmp[0] = a + min(min_dp[0], min_dp[1]);
-    min_tmp[1] = b + min({min_dp[0], min_dp[1], min_dp[2]});
-    min_tmp[2] = c + min(min_dp[1], min_dp[2]);
-
-    max_dp = max_tmp;
-    min_dp = min_tmp;
+  char arr[N + 1][3];
+  for (int i = 1; i <= N; ++i) {
+    scanf(" %c %c %c", &arr[i][0], &arr[i][1], &arr[i][2]);
+    
+    arr[i][0] -= '0';
+    arr[i][1] -= '0';
+    arr[i][2] -= '0';
   }
 
-  cout << max({max_dp[0], max_dp[1], max_dp[2]}) << " "
-       << min({min_dp[0], min_dp[1], min_dp[2]});
-  
+  int dp[N + 1][3];
+  memset(dp, 0, sizeof(dp));
+
+  for (int i = 1; i <= N; ++i) {
+    dp[i][0] = arr[i][0] + max(dp[i - 1][0], dp[i - 1][1]);
+    dp[i][1] = arr[i][1] + max({dp[i - 1][0], dp[i - 1][1], dp[i - 1][2]});
+    dp[i][2] = arr[i][2] + max(dp[i - 1][1], dp[i - 1][2]);
+  }
+
+  printf("%d ", max({dp[N][0], dp[N][1], dp[N][2]}));
+  memset(dp, 0, sizeof(dp));
+
+  for (int i = 1; i <= N; ++i) {
+    dp[i][0] = arr[i][0] + min(dp[i - 1][0], dp[i - 1][1]);
+    dp[i][1] = arr[i][1] + min({dp[i - 1][0], dp[i - 1][1], dp[i - 1][2]});
+    dp[i][2] = arr[i][2] + min(dp[i - 1][1], dp[i - 1][2]);
+  }
+
+  printf("%d ", min({dp[N][0], dp[N][1], dp[N][2]}));
+
   return 0;
 }
