@@ -8,7 +8,4 @@ while True:
         if N % div == 0:
             L.extend((div, N//div))
     
-    if sum(L) == N:
-        print(f"{N} = {' + '.join(map(str, sorted(L)))}")
-    else:
-        print(f"{N} is NOT perfect.")
+    print(f"{N} is NOT perfect." if sum(L) != N else f"{N} = {' + '.join(map(str, sorted(L)))}")
