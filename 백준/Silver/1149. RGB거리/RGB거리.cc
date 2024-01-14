@@ -1,32 +1,32 @@
 #include <iostream>
-#include <vector>
-#include <algorithm>
 
-using namespace std;
+#define MIN(a, b) ((a) < (b) ? (a) : (b))
 
 int main() {
-  ios_base::sync_with_stdio(false);
-  cin.tie(nullptr);
-
   int N;
-  cin >> N;
+  scanf(" %d", &N);
 
-  vector dp(N, vector(3, 0));
+  int R, G, B;
   for (int i = 0; i < N; ++i) {
     int r, g, b;
-    cin >> r >> g >> b;
+    scanf(" %d %d %d", &r, &g, &b);
 
     if (i == 0) {
-      dp[i] = {r, g, b};
+      R = r;
+      G = g;
+      B = b;
+
       continue;
     }
 
-    dp[i][0] = min(dp[i - 1][1], dp[i - 1][2]) + r;
-    dp[i][1] = min(dp[i - 1][0], dp[i - 1][2]) + g;
-    dp[i][2] = min(dp[i - 1][0], dp[i - 1][1]) + b;
-  }
+    int t1 = MIN(G, B) + r;
+    int t2 = MIN(R, B) + g;
+    int t3 = MIN(R, G) + b;
 
-  cout << min({dp[N - 1][0], dp[N - 1][1], dp[N - 1][2]});
+    R = t1, G = t2, B = t3;
+  }
+    
+  printf("%d", MIN(R, MIN(G, B)));
 
   return 0;
 }
