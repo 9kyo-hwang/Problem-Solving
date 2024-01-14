@@ -1,72 +1,25 @@
 #include <cstdio>
 
-struct Node {
-  char data;
-  Node *left, *right;
+char tree[27][2];
 
-  Node(char ch, char l, char r) : data(ch) {
-    if (l == '.') {
-      left = nullptr;
-    } else {
-      left = new Node(l, '.', '.');
-    }
-
-    if (r == '.') {
-      right = nullptr;
-    } else {
-      right = new Node(r, '.', '.');
-    }
-  }
-};
-
-Node *root = nullptr;
-
-Node * find(char ch, Node *node = root) {  
-  if (node == nullptr || node->data == ch) {
-    return node;
-  }
-
-  Node *tmp = find(ch, node->left);
-  if (tmp != nullptr) {
-    return tmp;
-  }
-
-  tmp = find(ch, node->right);
-  if (tmp != nullptr) {
-    return tmp;
-  }
-
-  return nullptr;
-}
-
-void preorder(Node *node = root) {
-  if (node == nullptr || node->data == '.') {
+void traversal(int mode, int node = 0) {
+  if (node + 'A' == '.') {
     return;
   }
 
-  printf("%c", node->data);
-  preorder(node->left);
-  preorder(node->right);
-}
-
-void inorder(Node *node = root) { 
-  if (node == nullptr || node->data == '.') {
-    return;
+  if (mode == 0) {
+    printf("%c", node + 'A');
+    traversal(mode, tree[node][0] - 'A');
+    traversal(mode, tree[node][1] - 'A');
+  } else if (mode == 1) {
+    traversal(mode, tree[node][0] - 'A');
+    printf("%c", node + 'A');
+    traversal(mode, tree[node][1] - 'A');
+  } else {
+    traversal(mode, tree[node][0] - 'A');
+    traversal(mode, tree[node][1] - 'A');
+    printf("%c", node + 'A');
   }
-    
-  inorder(node->left);
-  printf("%c", node->data);
-  inorder(node->right);
-}
-
-void postorder(Node *node = root) {
-  if (node == nullptr || node->data == '.') {
-    return;
-  }
-
-  postorder(node->left);
-  postorder(node->right);
-  printf("%c", node->data);
 }
 
 int main() {
@@ -74,24 +27,16 @@ int main() {
   scanf(" %d", &N);
 
   while (N--) {
-    char ch, left, right;
-    scanf(" %c %c %c", &ch, &left, &right);
-
-    if (root == nullptr) {
-      root = new Node(ch, left, right);
-      continue;
-    }
-
-    Node *node = find(ch);
-    node->left = new Node(left, '.', '.');
-    node->right = new Node(right, '.', '.');
+    char ch, l, r;
+    scanf(" %c %c %c", &ch, &l, &r);
+    tree[ch - 'A'][0] = l;
+    tree[ch - 'A'][1] = r;
   }
 
-  preorder();
-  printf("\n");
-  inorder();
-  printf("\n");
-  postorder();
+  for (int i = 0; i < 3; ++i) {
+    traversal(i);
+    printf("\n");
+  }
 
   return 0;
 }
