@@ -22,25 +22,20 @@ int main() {
     graph[b].emplace_back(a);
   }
 
-  deque<int> q;
-  vector visited(N + 1, false);
-  
-  vector<int> parents(N + 1);
-  iota(parents.begin(), parents.end(), 0);
+  deque<int> q;  
+  vector<int> parents(N + 1, 0);
 
   q.emplace_back(1);
-  visited[1] = true;
 
   while (!q.empty()) {
     const int from = q.front();
     q.pop_front();
 
     for (const auto &to : graph[from]) {
-      if (visited[to]) {
+      if (parents[to] != 0) {
         continue;
       }
 
-      visited[to] = true;
       parents[to] = from;
       q.emplace_back(to);
     }
