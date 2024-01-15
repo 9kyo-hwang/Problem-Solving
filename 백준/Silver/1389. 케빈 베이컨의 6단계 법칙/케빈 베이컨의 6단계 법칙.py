@@ -20,10 +20,5 @@ for k in range(1, N + 1):  # via node
             dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
             
 
-min_cnt, min_idx = INF, 0
-for i in range(1, N + 1):
-    if sum(dp[i][1:]) < min_cnt:
-        min_cnt = sum(dp[i][1:])
-        min_idx = i
-        
+min_idx = min(range(1, N + 1), key=lambda i: sum(dp[i][1:]))
 print(min_idx)
