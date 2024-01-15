@@ -1,4 +1,6 @@
-input = open(0).readline
+from sys import stdin
+
+input = stdin.readline
 INF = float('inf')
 
 
@@ -19,15 +21,9 @@ def main():
             for j in range(1, n + 1):
                 dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
                 
-    ans = 0
-    for i in range(1, n + 1):
-        total = 0
-        for j in range(1, n + 1):
-            if dp[i][j] <= m:
-                total += items[j]
-        ans = max(ans, total)
-    
+    ans = max(sum(items[j] for j in range(1, n + 1) if dp[i][j] <= m) for i in range(1, n + 1))
     print(ans)
+
 
 if __name__ == "__main__":
     main()
