@@ -1,29 +1,32 @@
-from sys import stdin
+from heapq import *
 
-input = stdin.readline
-INF = float('inf')
+input = open(0).readline
+
+n, m, r = map(int, input().split())
+items = [0] + list(map(int, input().split()))
+graph = [[] for _ in range(n + 1)]
+
+for _ in range(r):
+    a, b, l = map(int, input().split())
+    graph[a].append((b, l))
+    graph[b].append((a, l))
 
 
-def main():
-    n, m, r = map(int, input().split())
-    items = [0] + list(map(int, input().split()))
+def dijkstra(idx):
+    heap = []
+    dist = [float('inf')] * (n + 1)
     
-    dp = [[INF] * (n + 1) for _ in range(n + 1)]
-    for i in range(1, n + 1):
-        dp[i][i] = 0
-        
-    for _ in range(r):
-        a, b, l = map(int, input().split())
-        dp[a][b] = dp[b][a] = l
-        
-    for k in range(1, n + 1):
-        for i in range(1, n + 1):
-            for j in range(1, n + 1):
-                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
-                
-    ans = max(sum(items[j] for j in range(1, n + 1) if dp[i][j] <= m) for i in range(1, n + 1))
-    print(ans)
+    heappush(heap, [0, idx])
+    dist[idx] = 0
+    
+    while heap:
+        src_dist, src = heappop(heap)
+        for dst, dst_dist in graph[src]:
+            if src_dist + dst_dist < dist[dst]:
+                dist[dst] = src_dist + dst_dist
+                heappush(heap, [dist[dst], dst])
+    
+    return sum(items[i] for i in range(1, n + 1) if dist[i] <= m)
 
 
-if __name__ == "__main__":
-    main()
+print(max(dijkstra(i) for i in range(1, n + 1)))
