@@ -25,10 +25,7 @@ int dfs(unordered_map<int, int> &color, int v) {
         if(color[w] == static_cast<int>(EColor::GRAY)) {
             return 1;
         } else if(color[w] == static_cast<int>(EColor::WHITE)) {
-            int shape = dfs(color, w);
-            if(shape != 2) {
-                return shape;
-            }
+            return dfs(color, w);
         }
     }
     
