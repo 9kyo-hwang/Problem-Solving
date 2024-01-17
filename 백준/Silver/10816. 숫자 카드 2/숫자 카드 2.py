@@ -1,15 +1,16 @@
-from collections import defaultdict
-
 input = open(0).readline
 
 N = int(input())
 cards = list(map(int, input().split()))
 
-counter = defaultdict(int)
+counter = {}
 for card in cards:
-    counter[card] += 1
+    if card not in counter:
+        counter[card] = 1
+    else:
+        counter[card] += 1
 
 M = int(input())
 commands = list(map(int, input().split()))
 
-print(' '.join(str(counter[cmd]) for cmd in commands))
+print(' '.join(str(counter[cmd]) if cmd in counter else '0' for cmd in commands))
