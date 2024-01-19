@@ -4,17 +4,21 @@ input = open(0).readline
 MAX = int(1e6) + 1
 
 is_prime = [True] * MAX
+primes = []
 for i in range(2, int(math.sqrt(MAX))):
-    if is_prime[i]:
-        for j in range(i * i, MAX, i):
-            is_prime[j] = False
+    if not is_prime[i]:
+        continue
+    
+    for j in range(i * i, MAX, i):
+        is_prime[j] = False
+    primes.append(i)
 
 
 while (n := int(input())) and n != 0:
     flag = False
-    for i in range(3, n // 2 + 1, 2):
-        if is_prime[i] and is_prime[n - i]:
-            print("{} = {} + {}".format(n, i, n - i))
+    for prime in primes:
+        if is_prime[n - prime]:
+            print("{} = {} + {}".format(n, prime, n - prime))
             flag = True
             break
 
