@@ -21,18 +21,15 @@ int main() {
     }
   }
 
-  vector<int> primes;
-  for (int i = 2; i <= N; ++i) {
-    if (is_prime[i]) {
-      primes.emplace_back(i);
-    }
-  }
-
   deque<int> dq;
   int answer = 0, summation = 0;
-  for (const int prime : primes) {
-    summation += prime;
-    dq.emplace_back(prime);
+  for (int i = 2; i <= N; ++i) {
+    if (!is_prime[i]) {
+      continue;
+    }
+
+    summation += i;
+    dq.emplace_back(i);
 
     if (summation < N) {
       continue;
