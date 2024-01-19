@@ -31,20 +31,20 @@ int main() {
     summation += i;
     dq.emplace_back(i);
 
-    if (summation < N) {
-      continue;
-    } else if (summation == N) {
-      answer += 1;
-      continue;
-    } else {
-      while (!dq.empty() && summation > N) {
-        summation -= dq.front();
-        dq.pop_front();
-      }
-
+    if (summation <= N) {
       if (summation == N) {
         answer += 1;
       }
+      continue;
+    } 
+
+    while (!dq.empty() && summation > N) {
+      summation -= dq.front();
+      dq.pop_front();
+    }
+
+    if (summation == N) {
+      answer += 1;
     }
   }
 
