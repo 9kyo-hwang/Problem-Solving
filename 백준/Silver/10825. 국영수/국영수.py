@@ -6,4 +6,4 @@ for _ in range(int(input())):
     kor, eng, math = int(kor), int(eng), int(math)
     scores.append((-kor, eng, -math, name))
     
-print(*map(lambda x: x[3], sorted(scores)), sep='\n')
+print('\n'.join(map(lambda x: x[3], sorted(scores))))
