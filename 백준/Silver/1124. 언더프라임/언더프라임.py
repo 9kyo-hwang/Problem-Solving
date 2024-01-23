@@ -1,30 +1,31 @@
-import math
 input = open(0).readline
 
-A, B = map(int, input().split())
+a, b = map(int, input().split())
+primeCheck = [0, 0] + [1] * (b-1)
+primes = []
+for i in range(2, b+1):
+    if primeCheck[i] == 0:
+        continue
 
-is_primes = [True] * (B + 1)
-is_primes[0] = is_primes[1] = False
+    for j in range(i*2, b+1, i):
+        primeCheck[j] = 0
+    primes.append(i)
 
-for i in range(2, int(math.sqrt(B)) + 1):
-    if is_primes[i]:
-        for j in range(i * i, B + 1, i):
-            is_primes[j] = False
-            
-ans = 0  
-for x in range(A, B + 1):
-    sqrt_x = int(math.sqrt(x))
-    div, cnt = 2, 0
-    while div <= sqrt_x:
-        if x % div != 0:
-            div += 1
-        else:
+ans = 0
+for p in range(a, b+1):
+    cnt = 0
+    k = 2
+    while k <= int(p**0.5):
+        if p % k == 0:
+            p //= k
             cnt += 1
-            x //= div
-            
-    if x > 1:
+        else:
+            k += 1
+
+    if p > 1:
         cnt += 1
-        
-    ans += 1 if is_primes[cnt] else 0
-    
+
+    if primeCheck[cnt] == 1:
+        ans += 1
+
 print(ans)
