@@ -14,18 +14,17 @@ for i in range(2, int(math.sqrt(B)) + 1):
 ans = 0  
 for x in range(A, B + 1):
     sqrt_x = int(math.sqrt(x))
-    div_list = []
-    div = 2
+    div, cnt = 2, 0
     while div <= sqrt_x:
         if x % div != 0:
             div += 1
         else:
-            div_list.append(div)
+            cnt += 1
             x //= div
             
     if x > 1:
-        div_list.append(x)
+        cnt += 1
         
-    ans += 1 if is_primes[len(div_list)] else 0
+    ans += 1 if is_primes[cnt] else 0
     
 print(ans)
