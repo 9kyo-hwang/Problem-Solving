@@ -1,10 +1,11 @@
 #include <string>
 #include <vector>
+#include <unordered_set>
 
 using namespace std;
 
 size_t n, m;
-vector<bool> check;
+unordered_set<int> cols;
 
 int dfs(vector<vector<int>> &land, int x, int y) {
     if(x < 0 || x >= n || y < 0 || y >= m || land[x][y] != 1) {
@@ -12,14 +13,13 @@ int dfs(vector<vector<int>> &land, int x, int y) {
     }
     
     land[x][y] = 2;
-    check[y] = true;
+    cols.emplace(y);
     return 1 + dfs(land, x - 1, y) + dfs(land, x, y + 1) + dfs(land, x + 1, y) + dfs(land, x, y - 1);
 }
 
 int solution(vector<vector<int>> land) {
     n = land.size(), m = land[0].size();
-    check.assign(m, false);
-    vector<int> ans(m, 0);
+    vector<int> areas(m, 0);
     
     for(int j = 0; j < m; ++j) {
         for(int i = 0; i < n; ++i) {
@@ -27,20 +27,18 @@ int solution(vector<vector<int>> land) {
                 continue;
             }
             
+            cols.clear();
             int cnt = dfs(land, i, j);
-            for(int k = 0; k < m; ++k) {
-                if(check[k]) {
-                    ans[k] += cnt;
-                    check[k] = false;
-                }
+            for(const int col : cols) {
+                areas[col] += cnt;
             }
         }
     }
     
     int answer = 0;
     for(int j = 0; j < m; ++j) {
-        if(ans[j] > answer) {
-            answer = ans[j];
+        if(areas[j] > answer) {
+            answer = areas[j];
         }
     }
     return answer;
