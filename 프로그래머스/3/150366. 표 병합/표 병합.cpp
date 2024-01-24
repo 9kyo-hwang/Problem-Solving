@@ -6,90 +6,95 @@
 
 using namespace std;
 
-const int R = 50, C = 50;
-vector<string> table;
-vector<int> parents;
-
-inline int convert(int r, int c) {
-    return r * C + c;
-}
-
-int find(int x) {
-    while(x != parents[x]) {
-        parents[x] = parents[parents[x]];
-        x = parents[x];
-    }
-    return parents[x];
-}
-
-void unite(int x, int y) {
-    int root_x = find(x);
-    int root_y = find(y);
-    
-    if(table[root_x] == "EMPTY") {
-        parents[root_x] = root_y;
-        for(int i = 0; i < R * C; ++i) {
-            if(parents[i] == root_x) {
-                parents[i] = root_y;
-            }
-        }
-    } else {
-        parents[root_y] = root_x;
-        for(int i = 0; i < R * C; ++i) {
-            if(parents[i] == root_y) {
-                parents[i] = root_x;
-            }
-        }
-    }
-}
-
-string PRINT(const vector<string>& v) {
-    int r = stoi(v[1]) - 1, c = stoi(v[2]) - 1;
-    return table[find(convert(r, c))];
-}
-
-void UNMERGE(const vector<string>& v) {
-    int r = stoi(v[1]) - 1, c = stoi(v[2]) - 1;
-    int parent = find(convert(r, c));
-    string content = table[parent];
-    
-    for(int i = 0; i < R * C; ++i) {
-        if(parents[i] == parent) {
-            parents[i] = i;
-            table[i] = "EMPTY";
-        }
-    }
-    
-    table[convert(r, c)] = content;
-}
-
-void MERGE(const vector<string>& v) {
-    int r1 = stoi(v[1]) - 1, c1 = stoi(v[2]) - 1, r2 = stoi(v[3]) - 1, c2 = stoi(v[4]) - 1;
-    unite(convert(r1, c1), convert(r2, c2));
-}
-
-void UPDATE(const vector<string>& v) {
-    if(v.size() == 4) {
-        int r = stoi(v[1]) - 1, c = stoi(v[2]) - 1;
-        string value = v[3];
+class Table {
+public:
+    Table() {
+        parents.resize(R * C);
+        iota(parents.begin(), parents.end(), 0);
         
-        table[find(convert(r, c))] = value;
-    } else if(v.size() == 3) {
-        string value1 = v[1], value2 = v[2];
-        for(int i = 0; i < R * C; ++i) {
-            if(table[i] == value1) {
-                table[i] = value2;
+        data.assign(R * C, "EMPTY");
+    }
+    ~Table() = default;
+    
+    void update(int r, int c, const string& value) {
+        data[find(convert(r, c))] = value;
+    }
+    
+    void update(const string& value1, const string& value2) {
+        for(string &content : data) {
+            if(content == value1) {
+                content = value2;
             }
         }
     }
-}
+    
+    void merge(int r1, int c1, int r2, int c2) {
+        unite(convert(r1, c1), convert(r2, c2));
+    }
+    
+    void unmerge(int r, int c) {
+        int parent = find(convert(r, c));
+        string content = data[parent];
+        
+        for(int i = 0; i < R * C; ++i) {
+            if(parents[i] == parent) {
+                parents[i] = i;
+                data[i] = "EMPTY";
+            }
+        }
+        
+        data[convert(r, c)] = content;
+    }
+    
+    string print(int r, int c) {
+        return data[find(convert(r, c))];
+    }
+    
+private:
+    static const int R = 51, C = 51;
+    vector<string> data;
+    vector<int> parents;
+
+    inline int convert(int r, int c) {
+        return r * C + c;
+    }
+    
+    int find(int x) {
+        while(x != parents[x]) {
+            parents[x] = parents[parents[x]];
+            x = parents[x];
+        }
+        return parents[x];
+    }
+    
+    void unite(int x, int y) {
+        x = find(x);
+        y = find(y);
+        
+        if(x == y) {
+            return;
+        }
+        
+        if(data[x] == "EMPTY") {
+            for(int& parent : parents) {
+                if(parent == x) {
+                    parent = y;
+                }
+            }
+        } else {
+            for(int& parent : parents) {
+                if(parent == y) {
+                    parent = x;
+                }
+            }
+        }
+    }
+};
 
 vector<string> solution(vector<string> commands) {
-    table.assign(R * C, "EMPTY");
-    parents.resize(R * C);
-    iota(parents.begin(), parents.end(), 0);
-    
+    Table table;
     vector<string> answer;
+    
     for(const string& command : commands) {
         istringstream ss(command);
         string buffer; vector<string> v;
@@ -98,13 +103,17 @@ vector<string> solution(vector<string> commands) {
         }
         
         if(v[0] == "UPDATE") {
-            UPDATE(v);
+            if(v.size() == 4) {
+                table.update(stoi(v[1]), stoi(v[2]), v[3]);
+            } else if(v.size() == 3) {
+                table.update(v[1], v[2]);
+            }
         } else if(v[0] == "MERGE") {
-            MERGE(v);
+            table.merge(stoi(v[1]), stoi(v[2]), stoi(v[3]), stoi(v[4]));
         } else if(v[0] == "UNMERGE") {
-            UNMERGE(v);
+            table.unmerge(stoi(v[1]), stoi(v[2]));
         } else if(v[0] == "PRINT") {
-            answer.emplace_back(PRINT(v));
+            answer.emplace_back(table.print(stoi(v[1]), stoi(v[2])));
         }
     }
     
