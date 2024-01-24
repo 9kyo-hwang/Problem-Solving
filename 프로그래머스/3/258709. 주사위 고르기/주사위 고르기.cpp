@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -34,7 +33,6 @@ vector<int> solution(vector<vector<int>> dice) {
             if(v[i]) {
                 A.emplace_back(dice[i]);
                 A_indices.emplace_back(i + 1);
-                cout << i + 1 << " ";
             } else {
                 B.emplace_back(dice[i]);
             }
