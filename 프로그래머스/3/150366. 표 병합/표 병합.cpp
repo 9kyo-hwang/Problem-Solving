@@ -2,7 +2,6 @@
 #include <vector>
 #include <sstream>
 #include <numeric>
-#include <iostream>
 
 using namespace std;
 
@@ -11,45 +10,57 @@ public:
     Table() {
         parents.resize(R * C);
         iota(parents.begin(), parents.end(), 0);
-        
+
         data.assign(R * C, "EMPTY");
     }
     ~Table() = default;
     
-    void update(int r, int c, const string& value) {
-        data[find(convert(r, c))] = value;
-    }
-    
-    void update(const string& value1, const string& value2) {
-        for(string &content : data) {
-            if(content == value1) {
-                content = value2;
+    void update(const vector<string>& command) {
+        if(command.size() == 3) {
+            int r = stoi(command[0]), c = stoi(command[1]);
+            string value = command[2];
+            
+            data[find(convert(r, c))] = value;
+        } else if(command.size() == 2) {
+            string value1 = command[0], value2 = command[1];
+            
+            for(string &content : data) {
+                if(content == value1) {
+                    content = value2;
+                }
             }
         }
     }
     
-    void merge(int r1, int c1, int r2, int c2) {
+    void merge(const vector<string>& command) {
+        int r1 = stoi(command[0]), c1 = stoi(command[1]);
+        int r2 = stoi(command[2]), c2 = stoi(command[3]);
+        
         unite(convert(r1, c1), convert(r2, c2));
     }
     
-    void unmerge(int r, int c) {
+    void unmerge(const vector<string>& command) {
+        int r = stoi(command[0]), c = stoi(command[1]);
+        
         int parent = find(convert(r, c));
         string content = data[parent];
-        
+
         for(int i = 0; i < R * C; ++i) {
             if(parents[i] == parent) {
                 parents[i] = i;
                 data[i] = "EMPTY";
             }
         }
-        
+
         data[convert(r, c)] = content;
     }
     
-    string print(int r, int c) {
+    string print(const vector<string>& command) {
+        int r = stoi(command[0]), c = stoi(command[1]);
+        
         return data[find(convert(r, c))];
     }
-    
+
 private:
     static const int R = 51, C = 51;
     vector<string> data;
@@ -58,23 +69,23 @@ private:
     inline int convert(int r, int c) {
         return r * C + c;
     }
-    
-    int find(int x) {
+
+    inline int find(int x) {
         while(x != parents[x]) {
             parents[x] = parents[parents[x]];
             x = parents[x];
         }
         return parents[x];
     }
-    
-    void unite(int x, int y) {
+
+    inline void unite(int x, int y) {
         x = find(x);
         y = find(y);
-        
+
         if(x == y) {
             return;
         }
-        
+
         if(data[x] == "EMPTY") {
             for(int& parent : parents) {
                 if(parent == x) {
@@ -91,31 +102,36 @@ private:
     }
 };
 
+pair<string, vector<string>> command_parser(const string& command) {
+    istringstream ss(command);
+    string cmd; ss >> cmd;
+
+    string buffer;
+    vector<string> v;
+    while(ss >> buffer) {
+        v.emplace_back(buffer);
+    }
+
+    return {cmd, v};
+}
+
 vector<string> solution(vector<string> commands) {
     Table table;
     vector<string> answer;
-    
+
     for(const string& command : commands) {
-        istringstream ss(command);
-        string buffer; vector<string> v;
-        while(ss >> buffer) {
-            v.emplace_back(buffer);
-        }
+        const auto& [cmd, v] = command_parser(command);
         
-        if(v[0] == "UPDATE") {
-            if(v.size() == 4) {
-                table.update(stoi(v[1]), stoi(v[2]), v[3]);
-            } else if(v.size() == 3) {
-                table.update(v[1], v[2]);
-            }
-        } else if(v[0] == "MERGE") {
-            table.merge(stoi(v[1]), stoi(v[2]), stoi(v[3]), stoi(v[4]));
-        } else if(v[0] == "UNMERGE") {
-            table.unmerge(stoi(v[1]), stoi(v[2]));
-        } else if(v[0] == "PRINT") {
-            answer.emplace_back(table.print(stoi(v[1]), stoi(v[2])));
+        if(cmd == "UPDATE") {
+            table.update(v);
+        } else if(cmd == "MERGE") {
+            table.merge(v);
+        } else if(cmd == "UNMERGE") {
+            table.unmerge(v);
+        } else if(cmd == "PRINT") {
+            answer.emplace_back(table.print(v));
         }
     }
-    
+
     return answer;
 }
