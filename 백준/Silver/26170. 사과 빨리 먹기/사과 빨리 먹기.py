@@ -4,9 +4,10 @@ sys.setrecursionlimit(10**6)
 input = sys.stdin.readline
 
 board = [list(map(int, input().split())) for _ in range(5)]
-offset = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-
 r, c = map(int, input().split())
+
+offset = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+visited = [[col == -1 for col in row] for row in board]
 
 
 def out_of_bound(x: int, y: int) -> bool:
@@ -14,22 +15,21 @@ def out_of_bound(x: int, y: int) -> bool:
 
 
 def dfs(x: int, y: int, step: int = 0, apple: int = 0) -> int:
-    if out_of_bound(x, y) or board[x][y] == -1:
-        return float('inf')
+    if out_of_bound(x, y) or visited[x][y]:
+        return -1
     elif apple == 2 and board[x][y] == 1:
         return step
     else:
-        is_apple = board[x][y] == 1
-        board[x][y] = -1
-        
-        min_step: int = float('inf')
+        visited[x][y] = True
+        min_step: int = -1
         for dx, dy in offset:
             nx, ny = x + dx, y + dy
             
-            min_step = min(min_step, dfs(nx, ny, step + 1, apple + is_apple))
+            res = dfs(nx, ny, step + 1, apple + board[x][y])
+            if res != -1 and (min_step == -1 or res < min_step):
+                min_step = res
             
-        board[x][y] = 1 if is_apple else 0
+        visited[x][y] = False
         return min_step
-    
-ans = dfs(r, c)
-print(-1 if ans == float('inf') else ans)
+
+print(dfs(r, c))
