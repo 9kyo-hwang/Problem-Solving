@@ -1,7 +1,4 @@
-import sys
-sys.setrecursionlimit(10**6)
-
-input = sys.stdin.readline
+input = open(0).readline
 
 board = [list(map(int, input().split())) for _ in range(5)]
 r, c = map(int, input().split())
