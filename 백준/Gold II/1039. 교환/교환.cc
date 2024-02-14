@@ -6,11 +6,11 @@
 using namespace std;
 
 string N; int K;
-unordered_set<string> Visited[11];
+unordered_set<int> Visited[11];
 
 int DFS(string Num = N, int Depth = 0)
 {
-    if(Visited[Depth].find(Num) != Visited[Depth].end())
+    if(Visited[Depth].find(stoi(Num)) != Visited[Depth].end())
     {
         return -1;
     }
@@ -20,7 +20,7 @@ int DFS(string Num = N, int Depth = 0)
     }
     else
     {
-        Visited[Depth].emplace(Num);
+        Visited[Depth].emplace(stoi(Num));
         
         int MaxNum = -1;
         for(int i = 0; i < N.size() - 1; ++i)
