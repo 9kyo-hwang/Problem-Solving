@@ -1,41 +1,41 @@
-#include <iostream>
+#include <cstdio>
 #include <string>
 #include <algorithm>
 #include <unordered_set>
+#include <cmath>
 
 using namespace std;
 
-string N; int K;
+int N, K, M;
 unordered_set<int> Visited[11];
 
-int DFS(string Num = N, int Depth = 0)
+int DFS(int Num = N, int Depth = 0)
 {
-    if(Visited[Depth].find(stoi(Num)) != Visited[Depth].end())
+    if(Visited[Depth].find(Num) != Visited[Depth].end())
     {
         return -1;
     }
     else if(Depth == K)
     {
-        return stoi(Num);
+        return Num;
     }
     else
     {
-        Visited[Depth].emplace(stoi(Num));
+        Visited[Depth].emplace(Num);
         
         int MaxNum = -1;
-        for(int i = 0; i < N.size() - 1; ++i)
+        for(int i = 0; i < M - 1; ++i)
         {
-            for(int j = i + 1; j < N.size(); ++j)
+            for(int j = i + 1; j < M; ++j)
             {
-                if(i == 0 && Num[j] == '0')
+                string TmpNum = to_string(Num);
+                if(i == 0 && TmpNum[j] == '0')
                 {
                     continue;
                 }
-                
-                string TmpNum = Num;
                 swap(TmpNum[i], TmpNum[j]);
                 
-                MaxNum = max(MaxNum, DFS(TmpNum, Depth + 1));
+                MaxNum = max(MaxNum, DFS(stoi(TmpNum), Depth + 1));
             }
         }
         
@@ -45,11 +45,10 @@ int DFS(string Num = N, int Depth = 0)
 
 int main()
 {
-    cin.tie(nullptr)->sync_with_stdio(false);
+    scanf(" %d %d", &N, &K);
+    M = floor(log10(N)+1);
     
-    cin >> N >> K;
-
-    cout << DFS();
+    printf("%d", DFS());
     
     return 0;
 }
