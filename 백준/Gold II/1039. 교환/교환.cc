@@ -1,16 +1,16 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
-#include <vector>
+#include <unordered_set>
 
 using namespace std;
 
 string N; int K;
-vector<vector<bool>> Visited;
+unordered_set<string> Visited[11];
 
-int DFS(string Num, int Depth)
+int DFS(string Num = N, int Depth = 0)
 {
-    if(Visited[Depth][stoi(Num)])
+    if(Visited[Depth].find(Num) != Visited[Depth].end())
     {
         return -1;
     }
@@ -20,7 +20,7 @@ int DFS(string Num, int Depth)
     }
     else
     {
-        Visited[Depth][stoi(Num)] = true;
+        Visited[Depth].emplace(Num);
         
         int MaxNum = -1;
         for(int i = 0; i < N.size() - 1; ++i)
@@ -48,9 +48,8 @@ int main()
     cin.tie(nullptr)->sync_with_stdio(false);
     
     cin >> N >> K;
-    Visited.assign(K + 1, vector<bool>(1000001, false));
-    
-    cout << DFS(N, 0);
+
+    cout << DFS();
     
     return 0;
 }
