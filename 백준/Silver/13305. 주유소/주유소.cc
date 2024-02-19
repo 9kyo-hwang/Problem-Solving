@@ -2,6 +2,7 @@
 #include <vector>
 
 using namespace std;
+using ll = long long;
 
 int main() {
   ios_base::sync_with_stdio(false);
@@ -19,20 +20,15 @@ int main() {
     cin >> prices[i];
   }
 
-  int answer = 0;
-  int index = 0;
-  while(index < N) {
-    int start = index;
-    int price = prices[index];
-    index += 1;
+  int price = prices[0];
+  ll answer = distances[0] * price;
 
-    while(price <= prices[index]) {
-      index += 1;
+  for(int i = 1; i < N; i += 1) {
+    if(price >= prices[i]) {
+      price = prices[i];
     }
 
-    for(int i = start; i < index; i += 1) {
-      answer += price * distances[i];
-    }
+    answer += price * distances[i];
   }
 
   cout << answer;
