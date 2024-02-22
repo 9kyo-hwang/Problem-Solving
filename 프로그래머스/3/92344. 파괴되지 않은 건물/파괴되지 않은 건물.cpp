@@ -1,8 +1,6 @@
 #include <string>
 #include <vector>
 
-#define Integer static_cast<int>
-
 using namespace std;
 
 struct FSkill
@@ -25,7 +23,7 @@ vector<vector<int>> GetWeightMatrix(const int N, const int M, const vector<vecto
     for(const vector<int>& InSkill : InSkills)
     {
         FSkill Skill(InSkill);
-        if(Skill.Type == Integer(ESkillType::ATTACK))
+        if(Skill.Type == static_cast<int>(ESkillType::ATTACK))
         {
             WeightMatrix[Skill.R1][Skill.C1] -= Skill.Degree;
             WeightMatrix[Skill.R2 + 1][Skill.C2 + 1] -= Skill.Degree;
@@ -33,7 +31,7 @@ vector<vector<int>> GetWeightMatrix(const int N, const int M, const vector<vecto
             WeightMatrix[Skill.R1][Skill.C2 + 1] += Skill.Degree;
             WeightMatrix[Skill.R2 + 1][Skill.C1] += Skill.Degree;
         }
-        else if(Skill.Type == Integer(ESkillType::HEAL))
+        else if(Skill.Type == static_cast<int>(ESkillType::HEAL))
         {
             WeightMatrix[Skill.R1][Skill.C1] += Skill.Degree;
             WeightMatrix[Skill.R2 + 1][Skill.C2 + 1] += Skill.Degree;
@@ -67,20 +65,16 @@ int solution(vector<vector<int>> Board, vector<vector<int>> Skills)
     const int N = Board.size(), M = Board[0].size();
     vector<vector<int>> WeightMatrix = GetWeightMatrix(N, M, Skills);
     
+    int Answer = 0;
     for(int i = 0; i < N; ++i)
     {
         for(int j = 0; j < M; ++j)
         {
             Board[i][j] += WeightMatrix[i][j];
-        }
-    }
-    
-    int Answer = 0;
-    for(const vector<int>& Row : Board)
-    {
-        for(const int& Col : Row)
-        {
-            Answer += (Col > 0);
+            if(Board[i][j] > 0)
+            {
+                Answer += 1;
+            }
         }
     }
     
