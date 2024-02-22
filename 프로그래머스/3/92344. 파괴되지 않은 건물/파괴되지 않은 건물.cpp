@@ -1,16 +1,15 @@
 #include <string>
 #include <vector>
-#include <iostream>
 
 #define Integer static_cast<int>
 
 using namespace std;
 
-struct SkillInfo
+struct FSkill
 {
     int Type, R1, C1, R2, C2, Degree;
     
-    SkillInfo(const vector<int>& Info) : Type(Info[0]), R1(Info[1]), C1(Info[2]), R2(Info[3]), C2(Info[4]), Degree(Info[5]) { }
+    FSkill(const vector<int>& InSkill) : Type(InSkill[0]), R1(InSkill[1]), C1(InSkill[2]), R2(InSkill[3]), C2(InSkill[4]), Degree(InSkill[5]) { }
 };
 
 enum class ESkillType
@@ -23,9 +22,9 @@ enum class ESkillType
 vector<vector<int>> GetWeightMatrix(const int N, const int M, const vector<vector<int>>& InSkills)
 {
     vector WeightMatrix(N + 1, vector(M + 1, 0));
-    for(const vector<int>& SkillRow : InSkills)
+    for(const vector<int>& InSkill : InSkills)
     {
-        SkillInfo Skill(SkillRow);
+        FSkill Skill(InSkill);
         if(Skill.Type == Integer(ESkillType::ATTACK))
         {
             WeightMatrix[Skill.R1][Skill.C1] -= Skill.Degree;
@@ -76,13 +75,14 @@ int solution(vector<vector<int>> Board, vector<vector<int>> Skills)
         }
     }
     
-    int answer = 0;
+    int Answer = 0;
     for(const vector<int>& Row : Board)
     {
         for(const int& Col : Row)
         {
-            answer += (Col > 0);
+            Answer += (Col > 0);
         }
     }
-    return answer;
+    
+    return Answer;
 }
