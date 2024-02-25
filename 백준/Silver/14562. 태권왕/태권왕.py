@@ -1,20 +1,19 @@
-from collections import deque
+from heapq import *
 input = open(0).readline
 
 for _ in range(C := int(input())):
     S, T = map(int, input().split())
+    heap = [(0, S, T)]
     
-    q = deque([(S, T, 0)])
-    
-    while q:
-        src, target, cnt = q.popleft()
+    while heap:
+        cnt, s, t = heappop(heap)
         
-        if src - target == 0:
+        if s == t:
             print(cnt)
             break
         
-        if src * 2 <= target + 3:
-            q.append((src * 2, target + 3, cnt + 1))
+        for ns, nt in [(s * 2,  t + 3), (s + 1, t)]:
+            if ns > nt:
+                continue
             
-        if src + 1 <= target:
-            q.append((src + 1, target, cnt + 1))
+            heappush(heap, (cnt + 1, ns, nt))
