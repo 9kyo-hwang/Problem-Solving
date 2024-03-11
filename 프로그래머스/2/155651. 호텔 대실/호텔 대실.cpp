@@ -7,7 +7,7 @@ using namespace std;
 int solution(vector<vector<string>> BookTime) 
 {
     priority_queue<vector<string>, vector<vector<string>>, greater<>> CheckInQ(BookTime.begin(), BookTime.end());
-    priority_queue<vector<string>, vector<vector<string>>, greater<>> CheckOutQ;
+    priority_queue<string, vector<string>, greater<>> RentQ;
     
     auto TimeParser = [&](const string& Time) -> int
     {
@@ -16,26 +16,25 @@ int solution(vector<vector<string>> BookTime)
     
     while(!CheckInQ.empty())
     {
-        const vector<string> InTime = CheckInQ.top();
-        const string InStart = InTime[0], InEnd = InTime[1];
+        const vector<string> CheckIn = CheckInQ.top();
+        const string Start = CheckIn[0], End = CheckIn[1];
         CheckInQ.pop();
         
-        if(CheckOutQ.empty())
+        if(RentQ.empty())
         {
-            CheckOutQ.push({InEnd, InStart});
+            RentQ.emplace(End);
             continue;
         }
         
-        const vector<string> OutTime = CheckOutQ.top();
-        const string OutStart = OutTime[1], OutEnd = OutTime[0];
+        const string EarliestCheckOutTime = RentQ.top();
         
-        if(TimeParser(OutEnd) + 10 <= TimeParser(InStart))
+        if(TimeParser(EarliestCheckOutTime) + 10 <= TimeParser(Start))
         {
-            CheckOutQ.pop();
+            RentQ.pop();
         }
         
-        CheckOutQ.push({InEnd, InStart});
+        RentQ.emplace(End);
     }
     
-    return CheckOutQ.size();
+    return RentQ.size();
 }
