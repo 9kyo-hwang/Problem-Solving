@@ -9,9 +9,7 @@ for begin, end in pools:
         continue
     
     prev_plank_end = max(prev_plank_end, begin)
-    dist = end - prev_plank_end
-    
-    plank_cnt = dist // L + (dist % L > 0)
+    plank_cnt = (end - prev_plank_end) // L + ((end - prev_plank_end) % L > 0)
     
     ans += plank_cnt
     prev_plank_end += plank_cnt * L
