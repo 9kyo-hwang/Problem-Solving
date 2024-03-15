@@ -1,14 +1,8 @@
 from collections import Counter
 
 def solution(str1, str2):
-    str1 = str1.lower()
-    str2 = str2.lower()
-    
-    def generate_substrings(s):
-        return [s[i:i+2] for i in range(len(s) - 1) if s[i:i+2].isalpha()]
-    
-    m1 = Counter(generate_substrings(str1))
-    m2 = Counter(generate_substrings(str2))
+    m1 = Counter([str1[i:i+2].lower() for i in range(len(str1) - 1) if str1[i:i+2].isalpha()])
+    m2 = Counter([str2[i:i+2].lower() for i in range(len(str2) - 1) if str2[i:i+2].isalpha()])
     
     intersection = sum((m1 & m2).values())
     union = sum((m1 | m2).values())
