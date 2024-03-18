@@ -1,10 +1,10 @@
 # [level 3] 상담원 인원 - 214288 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/214288?language=cpp) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/214288?language=python3) 
 
 ### 성능 요약
 
-메모리: 4.14 MB, 시간: 167.94 ms
+메모리: 10.5 MB, 시간: 729.13 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 03월 18일 14:50:36
+2024년 03월 18일 19:37:29
 
 ### 문제 설명
 
