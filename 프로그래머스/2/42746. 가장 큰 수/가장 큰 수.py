@@ -13,4 +13,5 @@ def solution(numbers):
             return 0
     
     numbers.sort(key=cmp_to_key(comparator))
-    return str(int(''.join(map(str, numbers))))
+    ans = ''.join(map(str, numbers))
+    return '0' if ans[0] == '0' else ans
