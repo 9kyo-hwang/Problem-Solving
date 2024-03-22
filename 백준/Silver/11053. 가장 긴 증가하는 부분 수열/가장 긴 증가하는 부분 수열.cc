@@ -3,7 +3,7 @@
 #include <algorithm>
 
 using namespace std;
-using ll = long long;
+using ll = int;
 
 int main() {
   ios_base::sync_with_stdio(false);
@@ -13,14 +13,10 @@ int main() {
   int N;
   cin >> N;
 
-  vector<int> sequence(N);
-  for(int &i : sequence) {
-    cin >> i;
-  }
-
-  vector<ll> dp(N, 1);
+  vector<ll> dp(N, 1), sequence(N);
   ll maximum = 0;
   for(int i = 0; i < N; i += 1) {
+    cin >> sequence[i];
     for(int j = 0; j < i; j += 1) {
       if(sequence[i] > sequence[j]) {
         dp[i] = max(dp[i], dp[j] + 1);
