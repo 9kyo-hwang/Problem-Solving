@@ -7,10 +7,9 @@ dp = [1] * N
 ans = 0
 for i in range(N):
     for j in range(i):
-        if cards[i] <= cards[j]:
-            continue
+        if cards[i] > cards[j] and dp[i] < dp[j] + 1:
+            dp[i] = dp[j] + 1
             
-        dp[i] = max(dp[i], dp[j] + 1)
     ans = max(ans, dp[i])
 
 print(ans)
