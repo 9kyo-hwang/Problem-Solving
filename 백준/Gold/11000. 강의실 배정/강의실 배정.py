@@ -6,12 +6,8 @@ N = int(input())
 classes = [tuple(map(int, input().split())) for _ in range(N)]
 classes.sort()
 
-heap = []
+heap = [0]
 for S, T in classes:
-    if not heap:
-        heappush(heap, T)
-        continue
-    
     if heap[0] <= S:
         heappop(heap)
         
