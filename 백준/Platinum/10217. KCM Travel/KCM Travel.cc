@@ -1,84 +1,63 @@
 #include<iostream>
 #include<vector>
-#include<tuple>
 #include<queue>
-#include<functional>
-#include<algorithm>
-#include<cstring>
-
+#define INF 987654321
 using namespace std;
-
-const int MAX_N = 100;
-const int MAX_M = 10000;
-const int INF = 0x3f3f3f3f;
-int N, M, K;
-int dist[MAX_N + 1][MAX_M + 1];
-vector<tuple<int, int, int> > adj[MAX_N + 1];
-
-bool CmpCost(tuple<int, int, int>& a, tuple<int, int, int>& b) {
-    return get<1>(a) < get<1>(b);
+typedef struct node {
+	int V; int cost; int time;
+};
+vector<node> adj[102];
+typedef struct Node {
+	int V; int time;
+};
+typedef struct cmp {
+	bool operator()(Node& a, Node& b) {
+		return a.time > b.time;
+	}
+};
+priority_queue<Node, vector<Node>, cmp> pq;
+int dist[102][10002];
+void dijkstra(int M, int N) {
+	pq.push({ 1,0 });//출발지 1 도착지 N //(dist[1][j] = 0)
+	while (pq.size()) {
+		Node pop = pq.top(); pq.pop();
+		if (dist[pop.V][M] < pop.time)continue;//해당 정점에서 M비용 이하로 최소 시간으로 갔다면 그 이상으로 온것은 볼필요 없다!
+		for (int s = 0;s < adj[pop.V].size();s++) {
+			int arrive = adj[pop.V][s].V;
+			int time = adj[pop.V][s].time;
+			int C = adj[pop.V][s].cost;
+			int pre = dist[arrive][M];
+			for (int k = 0;k <= M;k++) {
+				if (k + C > M)break;
+				if (dist[pop.V][k] == INF)continue;//pop.V M에서만 check했기 때문에 여기서도 한번 더 거른다!
+				if (dist[pop.V][k] + time < dist[arrive][k + C])dist[arrive][k + C] = dist[pop.V][k] + time;
+			}
+			if (pre > dist[arrive][M])pq.push({ arrive,dist[arrive][M] });
+		}
+	}
+	if (dist[N][M] == INF)cout << "Poor KCM\n";
+	else cout << dist[N][M] << '\n';
 }
-
-void init() {
-    for (int i = 0; i <= N; i++) {
-        adj[i] = {};
-    }
-    memset(dist, 0x3f, sizeof(dist));
-}
-
-int dijkstra(int st) {
-    priority_queue<tuple<int, int, int>, vector<tuple<int, int, int> >, greater<tuple<int, int, int> > > pq;
-    dist[st][0] = 0;
-    pq.push({ dist[st][0], 0, st });
-    while (!pq.empty()) {
-        const auto [cur_dist, cur_cost, cur_idx] = pq.top(); pq.pop();
-
-        if (dist[cur_idx][cur_cost] != cur_dist) continue;
-
-        for (const auto& [d, c, v] : adj[cur_idx]) {
-            int nxt_dist = cur_dist + d;
-            int nxt_cost = cur_cost + c;
-            int nxt_idx = v;
-
-            if (nxt_cost > M) break;
-
-            if (nxt_dist < dist[nxt_idx][nxt_cost]) {
-                for (int i = nxt_cost; i <= M; i++) {
-                    if (dist[nxt_idx][i] <= nxt_dist) break;
-                    dist[nxt_idx][i] = nxt_dist;
-                }
-                pq.push({ dist[nxt_idx][nxt_cost], nxt_cost, nxt_idx });
-            }
-        }
-    }
-    
-    int ret = INF;
-    for (int i = 0; i <= M; i++) {
-        ret = min(ret, dist[N][i]);
-    }
-    
-    return ret;
-}
-
 int main() {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL); cout.tie(NULL);
+	ios::sync_with_stdio(0); cin.tie(0); cout.tie(0);
+	int T, N, M, K, u, v, c, d;//공항의 수 N
+	cin >> T;
+	for (int tc = 0;tc < T;tc++) {
+		cin >> N >> M >> K;
+		//초기화
+		while (pq.size()) { pq.pop(); }
+		for (int i = 1;i <= N;i++) {
+			for (int j = 0;j <= M;j++) {
+				if (i == 1)dist[i][j] = 0;//출발지 1
+				else dist[i][j] = INF;
+			}
+			adj[i].clear();
+		}
 
-    int test_case; cin >> test_case;
-    while (test_case--) {
-        init();
-        cin >> N >> M >> K;
-        for (int i = 0; i < K; i++) {
-            int u, v, c, d; cin >> u >> v >> c >> d;
-            adj[u].emplace_back( d, c, v );
-        }
-        for (int i = 1; i <= N; i++) {
-            sort(adj[i].begin(), adj[i].end(), CmpCost);
-        }
-        int ans = dijkstra(1);
-        if (ans >= INF) cout << "Poor KCM\n";
-        else cout << ans << '\n';
-    }
-
-    return 0;
+		for (int i = 0;i < K;i++) {
+			cin >> u >> v >> c >> d;
+			adj[u].push_back({ v,c,d });
+		}
+		dijkstra(M, N);
+	}
 }
