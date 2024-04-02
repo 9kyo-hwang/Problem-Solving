@@ -1,52 +1,38 @@
-#include <iostream>
-#include <vector>
-#include <algorithm>
+#include <cstdio>
 
-using namespace std;
+#define MAX(a, b) ((a) > (b) ? (a) : (b))
+
+int Memory[101], Cost[101], DP[10001];
 
 int main()
 {
-    cin.tie(nullptr)->sync_with_stdio(false);
-
-    int N, M; 
-    cin >> N >> M;
-    
-    vector<pair<int, int>> A(N);
-    for(auto& [MemoryUsage, RefreshCost] : A)
+    int N, M; scanf(" %d %d", &N, &M);
+    for(int i = 0; i < N; ++i)
     {
-        cin >> MemoryUsage;
+        scanf(" %d", &Memory[i]);
     }
     
-    int TotalRefreshCost = 0;
-    for(auto& [MemoryUsage, RefreshCost] : A)
+    int TotalCost = 0;
+    for(int i = 0; i < N; ++i)
     {
-        cin >> RefreshCost;
-        TotalRefreshCost += RefreshCost;
+        scanf(" %d", &Cost[i]);
+        TotalCost += Cost[i];
     }
     
-    vector<int> MaxMemoryEachCost(TotalRefreshCost + 1, 0);
-    for(const auto& [MemoryUsage, RefreshCost] : A)
+    for(int i = 0; i < N; ++i)
     {
-        for(int Cost = TotalRefreshCost; Cost >= RefreshCost; --Cost)
+        for(int j = TotalCost; j >= Cost[i]; --j)
         {
-            MaxMemoryEachCost[Cost] = max
-            (
-                MaxMemoryEachCost[Cost], 
-                MaxMemoryEachCost[Cost - RefreshCost] + MemoryUsage
-            );
+            DP[j] = MAX(DP[j], DP[j - Cost[i]] + Memory[i]);
         }
     }
     
     int Answer = 0;
-    for(int Cost = 0; Cost <= TotalRefreshCost; ++Cost)
+    while(Answer < TotalCost && DP[Answer] < M)
     {
-        if(MaxMemoryEachCost[Cost] >= M)
-        {
-            Answer = Cost;
-            break;
-        }
+        Answer += 1;
     }
-    cout << Answer;
+    printf("%d", Answer);
 
     return 0;
 }
