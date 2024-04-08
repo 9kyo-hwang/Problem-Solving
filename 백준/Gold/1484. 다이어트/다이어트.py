@@ -1,18 +1,18 @@
 input = open(0).readline
 G = int(input())
-NEXT_MAX = 50001
 
-flag = False
-prev_weight, next_weight = 1, 2
-while next_weight**2 - (next_weight - 1)**2 <= 100000:
-    if next_weight**2 - prev_weight**2 < G:
-        next_weight += 1
-    elif next_weight**2 - prev_weight**2 > G:
-        prev_weight += 1
+ans = []
+p, n = 1, 2    
+while n**2 - (n - 1)**2 <= G:
+    if n**2 - p**2 < G:
+        n += 1
+    elif n**2 - p**2 > G:
+        p += 1
     else:
-        print(next_weight)
-        next_weight += 1
-        flag = True
+        ans.append(n)
+        n += 1
         
-if not flag:
+if not ans:
     print(-1)
+else:
+    print(*ans, sep='\n')
