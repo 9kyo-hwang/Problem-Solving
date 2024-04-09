@@ -4,22 +4,27 @@ N, M = map(int, input().split())
 A = list(map(int, input().split()))
 B = list(map(int, input().split()))
 
-arr = []
-i, j = 0, 0
+arr = [0] * (N + M)
+i, j, k = 0, 0, 0
+
 while i < N and j < M:
     if A[i] < B[j]:
-        arr.append(A[i])
+        arr[k] = A[i]
+        k += 1
         i += 1
     else:
-        arr.append(B[j])
+        arr[k] = B[j]
+        k += 1
         j += 1
         
 while i < N:
-    arr.append(A[i])
+    arr[k] = A[i]
+    k += 1
     i += 1
     
 while j < M:
-    arr.append(B[j])
+    arr[k] = B[j]
+    k += 1
     j += 1
     
 print(*arr)
