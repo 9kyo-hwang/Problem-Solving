@@ -15,7 +15,7 @@ d[X] = 0
 while q:
     u = q.popleft()
     for v in G[u]:
-        if d[u] + 1 < d[v]:
+        if d[u] + 1 < d[v] and d[u] + 1 <= K:
             d[v] = d[u] + 1
             q.append(v)
             
