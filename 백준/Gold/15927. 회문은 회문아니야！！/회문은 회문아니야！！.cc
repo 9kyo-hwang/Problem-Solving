@@ -6,6 +6,8 @@
 using namespace std;
 
 int main() {
+    cin.tie(nullptr)->sync_with_stdio(false);
+    
     string str; cin >> str;
     string rstr = str; reverse(rstr.begin(), rstr.end());
     unordered_set<char> set(str.begin(), str.end());
