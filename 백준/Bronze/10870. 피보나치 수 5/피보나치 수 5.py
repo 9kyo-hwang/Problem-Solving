@@ -1,13 +1,7 @@
 n = int(input())
-dp = [-1] * (n + 1)
+dp = [0, 1] + [0] * (n - 1)
 
-def fib(num: int = n) -> int:
-    if num < 2:
-        return num
-    elif dp[num] > -1:
-        return dp[num]
-    else:
-        dp[num] = fib(num - 1) + fib(num - 2)
-        return dp[num]
+for i in range(2, n + 1):
+    dp[i] = dp[i - 1] + dp[i - 2]
         
-print(fib())
+print(dp[n])
