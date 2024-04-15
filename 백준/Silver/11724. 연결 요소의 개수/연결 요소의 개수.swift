@@ -14,7 +14,7 @@ struct Queue<T> {
     mutating func pop() -> T? {
         if dequeue.isEmpty {
             dequeue = enqueue.reversed()
-            enqueue.removeAll()
+            enqueue = []
         }
         return dequeue.popLast()
     }
@@ -40,7 +40,7 @@ func bfs(start: Int) {
     q.push(start)
     
     while !q.isEmpty {
-        let current = q.pop() ?? 0
+        let current = q.pop()!
         for i in graph[current] {
             if visited[i] == false {
                 q.push(i)
