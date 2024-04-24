@@ -1,15 +1,12 @@
 from collections import deque
-from sys import stdin, setrecursionlimit
-setrecursionlimit(10**6)
-input = stdin.readline
+input = open(0).readline
 
 n, k = map(int, input().split())
-distances = [100001] * (100001)
-parents = [i for i in range(100001)]
+distances = [100001] * 100001
+parents = [-1] * 100001
 
 q = deque([n])
 distances[n] = 0
-
 
 def out_of_bound(x: int) -> bool:
     return not (0 <= x <= 100000)
@@ -30,12 +27,9 @@ while q:
         q.append(nx)
         
 
-def dfs(x: int = k):
-    if(x == n):
-        print(x, end=' ')
-        return
+paths = deque([k])
+while parents[k] != -1:
+    k = parents[k]
+    paths.appendleft(k)
     
-    dfs(parents[x])
-    print(x, end=' ')
-    
-dfs()
+print(' '.join(map(str, paths)))
