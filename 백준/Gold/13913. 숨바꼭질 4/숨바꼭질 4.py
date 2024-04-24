@@ -1,5 +1,7 @@
 from collections import deque
-input = open(0).readline
+from sys import stdin, setrecursionlimit
+setrecursionlimit(10**6)
+input = stdin.readline
 
 n, k = map(int, input().split())
 distances = [100001] * (100001)
@@ -28,13 +30,12 @@ while q:
         q.append(nx)
         
 
-paths = deque([])
-x = k
-
-while x != n:
-    paths.appendleft(x)
-    x = parents[x]
+def dfs(x: int = k):
+    if(x == n):
+        print(x, end=' ')
+        return
     
-paths.appendleft(x)
-
-print(*paths)
+    dfs(parents[x])
+    print(x, end=' ')
+    
+dfs()
