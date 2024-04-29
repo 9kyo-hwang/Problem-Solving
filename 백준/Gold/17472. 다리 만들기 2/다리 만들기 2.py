@@ -1,79 +1,49 @@
-from collections import deque
 input = open(0).readline
-
-N, M = map(int, input().split())
-maps = [list(map(int, input().split())) for _ in range(N)]
-visited = [[col == 0 for col in row] for row in maps]
-offset = [(-1, 0), (0, 1), (1, 0), (0, -1)]
-
-num_island = 0
-island_numbers = {}
-islands = []
-
 
 def out_of_bound(x: int, y: int) -> bool:
     return not (0 <= x < N and 0 <= y < M)
-
-
-def labeling(i: int, j: int):
-    q = deque([(i, j)])
-    maps[i][j] = num_island
-    visited[i][j] = True
-    island_numbers[(i, j)] = num_island
-    islands.append((num_island, i, j))
     
-    while q:
-        x, y = q.popleft()
-        
-        for dx, dy in offset:
-            nx, ny = x + dx, y + dy
-            if out_of_bound(nx, ny) or visited[nx][ny]:
-                continue
-            
-            maps[nx][ny] = num_island
-            visited[nx][ny] = True
-            island_numbers[(nx, ny)] = num_island
-            islands.append((num_island, nx, ny))
-            
-            q.append((nx, ny))
 
-
-for i in range(N):
-    for j in range(M):
-        if visited[i][j]:
-            continue
-        
-        labeling(i, j)
-        num_island += 1
-
-
-edges = []
-for src, x, y in islands:
+def dfs(x: int, y: int):
+    #global node_number
+    
+    visited[x][y] = True
+    graph[x][y] = node_number
+    islands.append((x, y, node_number))
+    
     for dx, dy in offset:
-        nx, ny, d = x + dx, y + dy, 0
-        
-        while True:
-            if out_of_bound(nx, ny):
-                break
+        nx, ny = x + dx, y + dy
+        if not out_of_bound(nx, ny) and not visited[nx][ny]:
+            dfs(nx, ny)
             
-            dst = island_numbers.get((nx, ny))
-            if src == dst:
-                break
-            
-            if dst == None:
-                nx += dx
-                ny += dy
-                d += 1
-                continue
-            
-            if d < 2:
-                break
-            
-            edges.append((d, src, dst))
-            break
 
-
-parents = [i for i in range(num_island)]
+def make_edges():
+    #global edges
+    
+    for x, y, src in islands:
+        for dx, dy in offset:
+            nx, ny, d = x + dx, y + dy, 0
+            
+            while True:
+                if out_of_bound(nx, ny):
+                    break
+                
+                dst = graph[nx][ny]
+                if src == dst:
+                    break
+                
+                if dst == 0:
+                    nx += dx
+                    ny += dy
+                    d += 1
+                    continue
+                
+                if d < 2:
+                    break
+                
+                edges.append((d, src, dst))
+                break
+            
 
 def find(x: int) -> int:
     while x != parents[x]:
@@ -82,34 +52,50 @@ def find(x: int) -> int:
     return parents[x]
     
 
-def union(x: int, y: int) -> bool:
-    px = find(x)
-    py = find(y)
+def union(x: int, y: int):
+    x = find(x)
+    y = find(y)
     
-    if px == py:
+    if x == y:
         return False
         
-    if px < py:
-        parents[py] = px
+    if x < y:
+        parents[y] = x
     else:
-        parents[px] = py
+        parents[x] = y
         
     return True
-    
-cnt = num_island - 1
-edges = sorted(edges, reverse=True)
+            
+            
+N, M = map(int, input().split())
+graph = [list(map(int, input().split())) for _ in range(N)]
+visited = [[col == 0 for col in row] for row in graph]
+offset = [(-1, 0), (0, 1), (1, 0), (0, -1)]
 
+node_number = 1
+islands = []
+edges = []
+            
+for i in range(N):
+    for j in range(M):
+        if visited[i][j]:
+            continue
+        
+        dfs(i, j)
+        node_number += 1
+        
+make_edges()
+edges.sort()
 
-ans = 0
-while cnt:
-    try:
-        d, src, dst = edges.pop()
-    except:
-        ans = -1
-        break
-    
+parents = [i for i in range(node_number + 1)]
+ans, cnt = 0, 0
+
+for d, src, dst in edges:
     if union(src, dst):
         ans += d
-        cnt -= 1
+        cnt += 1
         
-print(ans)
+if cnt == node_number - 2:
+    print(ans)
+else:
+    print(-1)
