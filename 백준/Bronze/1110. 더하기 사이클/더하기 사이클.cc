@@ -1,34 +1,18 @@
-#include <iostream>
-#include <string>
-
-using namespace std;
+#include <cstdio>
 
 int main()
 {
-    cin.tie(nullptr)->sync_with_stdio(false);
+    int N; scanf("%d", &N);
+    int M = N;
+    int Cnt = 0;
     
-    string N; cin >> N;
-    if(N.size() == 1)
+    do
     {
-        N = '0' + N;
-    }
-    
-    string Num = N;
-    int Cnt = 1;
-    while(true)
-    {
-        string Sum{to_string((Num[0] - '0') + (Num[1] - '0'))};
-        string Tmp{Num.back(), Sum.back()};
-
-        if(N == Tmp)
-        {
-            cout << Cnt;
-            break;
-        }
-        
-        Num = Tmp;
+        M = (M % 10 * 10) + (M % 10 + M / 10) % 10;
         Cnt += 1;
-    }
+    } while(N ^ M);
 
+    printf("%d", Cnt);
+    
     return 0;
 }
