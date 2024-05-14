@@ -8,17 +8,21 @@ S = set(S + [S[i] + S[j] for i in range(M - 1) for j in range(i + 1, M) if S[i] 
 counts = [-1] * (N + 1)
 q = deque()
 
-for wok in S:  # start node
-    counts[wok] = 1
-    q.append(wok)
+for wok_size in S:  
+    counts[wok_size] = 1
+    q.append(wok_size)
     
 while q:
-    cook = q.popleft()
-    for wok in S:  # distance == node
-        if cook + wok > N or counts[cook + wok] > -1:
+    current_num_noodle = q.popleft()
+    if current_num_noodle == N:
+        break
+    
+    for wok_size in S:  # distance == node
+        next_num_noodle = current_num_noodle + wok_size
+        if next_num_noodle > N or counts[next_num_noodle] > -1:
             continue
         
-        counts[cook + wok] = counts[cook] + 1
-        q.append(cook + wok)
+        counts[next_num_noodle] = counts[current_num_noodle] + 1
+        q.append(next_num_noodle)
         
 print(counts[N])
