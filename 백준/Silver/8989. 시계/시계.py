@@ -1,24 +1,20 @@
 input = open(0).readline
-HOUR_ANGLE = 360 // 12
-MINUTE_ANGLE = 360 // 60
-
-hour_angles = {hour : hour * HOUR_ANGLE for hour in range(12)}
-minute_angles = {minute : minute * MINUTE_ANGLE for minute in range(60)}
+HOUR_ANGLE = 30
+MINUTE_ANGLE = 6
 
 for _ in range(T := int(input())):
-    str_times = list(input().split())
-    times = [list(map(int, time.split(':'))) for time in str_times]
+    times = tuple(input().split())
     angles = [0] * 5
     
-    for i, (hour, minute) in enumerate(times):
-        if hour >= 12:
-            hour -= 12
+    for i, time in enumerate(times):
+        hour, minute = map(int, time.split(':'))
+        hour %= 12
+            
+        hour_angle = hour * HOUR_ANGLE + minute * HOUR_ANGLE / 60
+        minute_angle = minute * MINUTE_ANGLE
         
-        hour_angle = hour_angles[hour] + minute * HOUR_ANGLE / 60
-        minute_angle = minute_angles[minute]
-        
-        max_angle, min_angle = max(hour_angle, minute_angle), min(hour_angle, minute_angle)
-        angle = min(max_angle - min_angle, min_angle + 360 - max_angle)
+        maxi, mini = max(hour_angle, minute_angle), min(hour_angle, minute_angle)
+        angle = min(maxi - mini, mini + 360 - maxi)
         angles[i] = angle
-        
-    print(sorted(zip(angles, str_times))[2][1])
+
+    print(sorted(zip(angles, times))[2][1])
