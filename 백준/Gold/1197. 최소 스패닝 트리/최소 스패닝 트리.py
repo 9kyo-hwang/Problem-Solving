@@ -7,9 +7,8 @@ edges = [tuple(map(int, input().split())) for _ in range(E)]
 edges.sort(key=lambda edge: edge[2])
 
 def find(x: int) -> int:
-    while x != parents[x]:
-        parents[x] = parents[parents[x]]
-        x = parents[x]
+    if x != parents[x]:
+        parents[x] = find(parents[x])
     return parents[x]
     
 
