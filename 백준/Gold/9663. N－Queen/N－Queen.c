@@ -5,7 +5,7 @@
 int N;
 int cols[MAX + 1];
 
-int promising(int level)
+inline int promising(int level)
 {
     for(int i = 1; i < level; ++i)
     {
