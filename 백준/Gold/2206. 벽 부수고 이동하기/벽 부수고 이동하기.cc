@@ -1,99 +1,76 @@
-#include <iostream>
-#include <string>
+#include <cstdio>
 #include <queue>
+#include <vector>
 #include <tuple>
 
 using namespace std;
 
-enum
-{
-	PATHWAY = 0,
-	WALL = 1,
-};
-
-int N, M; // row, col
-int map[1000][1000];
-bool visited[1000][1000][2];
-
-int offset[][2] =
-{
-	{-1, 0},
-	{0, 1},
-	{1, 0},
-	{0, -1}
-};
-
-bool IsOut(int x, int y)
-{
-	return x < 0 || x >= N || y < 0 || y >= M;
-}
-
-int NumShortestPath()
-{
-	// x, y 좌표, 벽 파괴 유무, 이동 거리
-	queue<tuple<pair<int, int>, bool, int>> q;
-	q.push({ { 0, 0 }, false, 1 });
-	visited[0][0][0] = true;
-
-	int count = -1;
-	while(!q.empty())
-	{
-		auto front = q.front();
-		int x = get<0>(front).first;
-		int y = get<0>(front).second;
-		bool flag = get<1>(front);
-		int distance = get<2>(front);
-		q.pop();
-
-		if(x == N - 1 && y == M - 1)
-		{
-			count = distance;
-			break;
-		}
-
-		for(auto &dir : offset)
-		{
-			int nx = x + dir[0], ny = y + dir[1];
-			if (IsOut(nx, ny) || visited[nx][ny][flag]) continue;
-
-			if(!flag && map[nx][ny] == PATHWAY)
-			{
-				visited[nx][ny][0] = true;
-				q.push({ { nx, ny }, false, distance + 1 });
-			}
-			else if(!flag && map[nx][ny] == WALL)
-			{
-				visited[nx][ny][1] = true;
-				q.push({ { nx, ny }, true, distance + 1 });
-			}
-			else if(flag && map[nx][ny] == PATHWAY)
-			{
-				visited[nx][ny][1] = true;
-				q.push({ { nx, ny }, true, distance + 1 });
-			}
-		}
-	}
-
-	return count;
-}
-
 int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr); cout.tie(nullptr);
+    int N, M; scanf(" %d %d", &N, &M);
+    vector Map(N, vector(M, 0));
+    for(auto& r : Map)
+    {
+        for(auto& c : r)
+        {
+            scanf("%1d", &c);
+        }
+    }
+    
+    vector Visited(N, vector(M, vector(2, -1)));
+    vector<pair<int, int>> Offset = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    
+    auto OutOfBound = [&](int X, int Y)
+    {
+        return X < 0 || X >= N || Y < 0 || Y >= M;
+    };
+    
+    deque<tuple<int, int, bool>> Q;
+    
+    Q.emplace_back(0, 0, false);
+    Visited[0][0][0] = 1;
+    
+    while(!Q.empty())
+    {
+        const auto [X, Y, Flag] = Q.front();
+        Q.pop_front();
+        
+        if(X == N - 1 && Y == M - 1)
+        {
+            break;
+        }
+        
+        for(const auto& [Dx, Dy] : Offset)
+        {
+            int Nx = X + Dx, Ny = Y + Dy;
+            if(OutOfBound(Nx, Ny) || Visited[Nx][Ny][Flag] != -1)
+            {
+                continue;
+            }
+            
+            if(!Flag && Map[Nx][Ny] == 1)
+            {
+                Visited[Nx][Ny][1] = Visited[X][Y][0] + 1;
+                Q.emplace_back(Nx, Ny, true);
+            }
+            else if(Map[Nx][Ny] == 0)
+            {
+                Visited[Nx][Ny][Flag] = Visited[X][Y][Flag] + 1;
+                Q.emplace_back(Nx, Ny, Flag);
+            }
+        }
+    }
+    
+    int Answer;
+    if(Visited[N - 1][M - 1][0] != -1 && Visited[N - 1][M - 1][1] != -1)
+    {
+        Answer = min(Visited[N - 1][M - 1][0], Visited[N - 1][M - 1][1]);
+    }
+    else
+    {
+        Answer = max(Visited[N - 1][M - 1][0], Visited[N - 1][M - 1][1]);
+    }
+    printf("%d", Answer);
 
-	cin >> N >> M;
-
-	for(int i = 0; i < N; i++)
-	{
-		string line;
-		cin >> line;
-		for (int j = 0; j < M; j++)
-			map[i][j] = line[j] - '0';
-	}
-	
-	int result = NumShortestPath();
-	cout << result;
-
-	return 0;
+    return 0;
 }
