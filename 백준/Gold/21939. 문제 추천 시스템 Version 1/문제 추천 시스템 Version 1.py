@@ -1,14 +1,18 @@
 from heapq import *
 input = open(0).readline
 
-min_heap, max_heap = [], []
+N = int(input())
+min_heap, max_heap = [()] * N, [()] * N
 problem_levels = {}
 
-def push(P: int, L: int):
-    heappush(min_heap, (L, P))
-    heappush(max_heap, (-L, -P))
+for i in range(N):
+    P, L = map(int, input().split())
+    min_heap[i] = (L, P)
+    max_heap[i] = (-L, -P)
     problem_levels[P] = L
-
+    
+heapify(min_heap)
+heapify(max_heap)
 
 def pop(mode: str):
     if mode == '1':
@@ -21,11 +25,6 @@ def pop(mode: str):
         return min_heap[0][1]
 
 
-for _ in range(N := int(input())):
-    P, L = map(int, input().split())
-    push(P, L)
-
-
 for _ in range(M := int(input())):
     command = list(input().split())
     
@@ -33,7 +32,10 @@ for _ in range(M := int(input())):
         print(pop(command[1]))
     elif command[0] == "add":
         P, L = int(command[1]), int(command[2])
-        push(P, L)
+
+        heappush(min_heap, (L, P))
+        heappush(max_heap, (-L, -P))
+        problem_levels[P] = L
     elif command[0] == "solved":
         P = int(command[1])
         del problem_levels[P]
