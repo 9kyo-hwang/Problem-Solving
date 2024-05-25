@@ -3,7 +3,7 @@ import java.util.*;
 
 public class Main {
     static int N, M;
-    static List<List<Integer>> adjacencyList;
+    static List<Integer>[] adjacencyList;
     static List<Integer> orderOfVisit;
 
     public static void main(String[] args) throws IOException {
@@ -14,16 +14,16 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         
-        adjacencyList = new ArrayList<>();
+        adjacencyList = new ArrayList[N + 1];
         for (int i = 0; i <= N; i++) {
-            adjacencyList.add(new ArrayList<>());
+            adjacencyList[i] = new ArrayList<>();
         }
         
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
             int A = Integer.parseInt(st.nextToken());
             int B = Integer.parseInt(st.nextToken());
-            adjacencyList.get(A).add(B);
+            adjacencyList[A].add(B);
         }
         
         topologySort();
@@ -39,7 +39,7 @@ public class Main {
 
     static void DFS(boolean[] visited, int srcNode) {
         visited[srcNode] = true;
-        for (int dstNode : adjacencyList.get(srcNode)) {
+        for (int dstNode : adjacencyList[srcNode]) {
             if (!visited[dstNode]) {
                 DFS(visited, dstNode);
             }
