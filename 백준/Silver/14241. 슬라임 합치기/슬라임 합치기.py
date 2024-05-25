@@ -1,13 +1,8 @@
-from collections import deque
-input = open(0).readline
-
 N = int(input())
-q = deque(list(map(int, input().split())))
+size = list(map(int, input().split()))
 
-score = 0
-while len(q) > 1:
-    x, y = q.popleft(), q.popleft()
-    score += x * y
-    q.append(x + y)
-    
+prev, score = 0, 0
+for i in range(N - 1):
+    prev += size[i]
+    score += prev * size[i + 1]
 print(score)
