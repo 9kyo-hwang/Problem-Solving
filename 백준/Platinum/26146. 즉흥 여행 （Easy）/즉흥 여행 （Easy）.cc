@@ -3,8 +3,6 @@
 
 using namespace std;
 
-int N, M;
-
 void DFSHelper(const vector<vector<int>>& Graph, vector<bool>& Visited, int SrcNode = 1)
 {
     Visited[SrcNode] = true;
@@ -17,7 +15,7 @@ void DFSHelper(const vector<vector<int>>& Graph, vector<bool>& Visited, int SrcN
     }
 }
 
-bool DFS(vector<vector<int>>& Graph)
+bool DFS(const int N, vector<vector<int>>& Graph)
 {
     vector<bool> Visited(N + 1, false);
     DFSHelper(Graph, Visited);
@@ -34,7 +32,9 @@ bool DFS(vector<vector<int>>& Graph)
 
 int main()
 {
-    cin >> N >> M;
+    cin.tie(nullptr)->sync_with_stdio(false);
+    
+    int N, M; cin >> N >> M;
     
     vector<vector<int>> G(N + 1);
     vector<vector<int>> GC(N + 1);
@@ -46,7 +46,7 @@ int main()
         GC[w].emplace_back(v);
     }
     
-    cout << (DFS(G) && DFS(GC) ? "Yes" : "No");
+    cout << (DFS(N, G) && DFS(N, GC) ? "Yes" : "No");
 
     return 0;
 }
