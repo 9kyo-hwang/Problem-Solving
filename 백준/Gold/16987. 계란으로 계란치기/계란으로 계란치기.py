@@ -1,32 +1,33 @@
 input = open(0).readline
 
 N = int(input())
-eggs = [dict] * N
+S, W = [0] * N, [0] * N
 for i in range(N):
-    S, W = map(int, input().split())
-    eggs[i] = {"S": S, "W": W}
+    s, w = map(int, input().split())
+    S[i], W[i] = s, w
     
 
 def backtracking(current: int = 0, broken: int = 0) -> int:
-    if current == N:  # 끝에 도달
+    if broken == N - 1 or current == N:  # 모든 계란이 깨졌거나 끝까지 왔다면면
         return broken
         
-    if eggs[current]["S"] <= 0 or broken == N - 1:  # 깰 수 없는 계란 or 모든 계란이 깨짐
+    if S[current] <= 0:  # 이미 깨짐
         return backtracking(current + 1, broken)
         
     count: int = 0
     for nxt in range(N):
-        if current == nxt or eggs[nxt]["S"] <= 0:  # 같은 계란이거나 이미 깨졌다면 skip
+        if current == nxt or S[nxt] <= 0:  # 같은 계란이거나 이미 깨졌다면 skip
             continue
         
-        eggs[current]["S"] -= eggs[nxt]["W"]
-        eggs[nxt]["S"] -= eggs[current]["W"]
+        S[current] -= W[nxt]
+        S[nxt] -= W[current]
         
-        count = max(count, backtracking(current + 1, broken + (eggs[current]["S"] <= 0) + (eggs[nxt]["S"] <= 0)))
+        count = max(count, backtracking(current + 1, broken + (S[current] <= 0) + (S[nxt] <= 0)))
         
-        eggs[current]["S"] += eggs[nxt]["W"]
-        eggs[nxt]["S"] += eggs[current]["W"]
+        S[current] += W[nxt]
+        S[nxt] += W[current]
+    
     return count
 
-
+    
 print(backtracking())
