@@ -1,41 +1,37 @@
 from heapq import *
 input = open(0).readline
 
-nodes, links, jam_start, jam_end = map(int,input().split())
+N, M, S, E = map(int,input().split())
+S, E = S * 2, E * 2
 
-jam_start *= 2
-jam_end *= 2
+graph = [[] for _ in range(N + 1)]
+dist = [float('inf')]*(N + 1)
 
-board = [[] for _ in range(nodes+1)]
-dist = [float('inf')]*(nodes+1)
+for _ in range(M):
+    A, B, L, t1, t2 = map(int,input().split())
+    graph[A].append((B, L * 2, t1))
+    graph[B].append((A, L * 2, t2))
 
-for _ in range(links):
-    s_node, e_node, w, s_to_e, e_to_s = map(int,input().split())
-    board[s_node].append((e_node, w * 2, s_to_e))
-    board[e_node].append((s_node, w * 2, e_to_s))
 
 dist[1] = 0
 heap = [(0, 1)]
 
 while heap:
-    now_t, now_node = heappop(heap)
+    tu, u = heappop(heap)
 
-    for next_node, w, isjam in board[now_node]:
-        if isjam and jam_start < now_t + w and jam_end > now_t:
+    for v, tv, t in graph[u]:
+        if t == 1 and S < tu + tv and tu < E:
+            traffic_jam_start = max(tu, S)
 
-            traffic_jam_start = max(now_t, jam_start)
-
-            if 2*(now_t + w - traffic_jam_start) < (jam_end - traffic_jam_start):
-                w += (now_t + w - traffic_jam_start)
+            if 2 * (tu + tv - traffic_jam_start) < (E - traffic_jam_start):
+                tv += (tu + tv - traffic_jam_start)
             else:
-                w += (jam_end - traffic_jam_start)//2
+                tv += (E - traffic_jam_start) // 2
+        
+        if tu + tv < dist[v]:
+            dist[v] = tu + tv
+            heappush(heap, (dist[v], v))
 
-        if dist[next_node] <= now_t + w:
-            continue
-
-        dist[next_node] = now_t + w
-
-        heappush(heap, (now_t+w, next_node))
 
 result = max(dist[1:])
 print(result // 2, end='')
