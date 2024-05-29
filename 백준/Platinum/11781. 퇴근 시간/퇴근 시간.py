@@ -1,10 +1,11 @@
 from heapq import *
+from collections import defaultdict
 input = open(0).readline
 
 N, M, S, E = map(int,input().split())
 S, E = S * 2, E * 2
 
-graph = [[] for _ in range(N + 1)]
+graph = defaultdict(list)
 dist = [float('inf')]*(N + 1)
 
 for _ in range(M):
@@ -17,19 +18,26 @@ dist[1] = 0
 heap = [(0, 1)]
 
 while heap:
-    tu, u = heappop(heap)
+    du, u = heappop(heap)
+    if dist[u] < du:
+        continue
 
-    for v, tv, t in graph[u]:
-        if t == 1 and S < tu + tv and tu < E:
-            traffic_jam_start = max(tu, S)
+    for v, dv, t in graph[u]:
+        if t == 0 and du + dv < dist[v]:
+            dist[v] = du + dv
+            heappush(heap, (dist[v], v))
+            continue
+            
+        if t == 1 and S < du + dv and du < E:
+            traffic_jam_start = max(du, S)
 
-            if 2 * (tu + tv - traffic_jam_start) < (E - traffic_jam_start):
-                tv += (tu + tv - traffic_jam_start)
+            if 2 * (du + dv - traffic_jam_start) < (E - traffic_jam_start):
+                dv += (du + dv - traffic_jam_start)
             else:
-                tv += (E - traffic_jam_start) // 2
+                dv += (E - traffic_jam_start) // 2
         
-        if tu + tv < dist[v]:
-            dist[v] = tu + tv
+        if du + dv < dist[v]:
+            dist[v] = du + dv
             heappush(heap, (dist[v], v))
 
 
