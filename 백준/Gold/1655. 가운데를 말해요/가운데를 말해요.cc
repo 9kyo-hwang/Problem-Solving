@@ -1,106 +1,66 @@
 #include <iostream>
-#include <vector>
 #include <queue>
+#include <memory>
 
 using namespace std;
 
-template<typename T>
-class MedianPriorityQueue 
+class FMedianHeap
 {
 public:
-	void push(T val)
-	{
-		if (!min_pq.empty() && val > min_pq.top())
-		{
-			min_pq.emplace(val);
-		}
-		else
-		{
-			max_pq.emplace(val);
-		}
-
-		this->heapify();
-	}
-
-	T top()
-	{
-		if (max_pq.empty() && min_pq.empty())
-		{
-			cerr << "Underflow";
-			exit(EXIT_FAILURE);
-		}
-
-		if (max_pq.size() >= min_pq.size())
-		{
-			return max_pq.top();
-		}
-		else
-		{
-			return min_pq.top();
-		}
-	}
-
-	void pop()
-	{
-		if (max_pq.empty() && min_pq.empty())
-		{
-			cerr << "Underflow";
-			exit(EXIT_FAILURE);
-		}
-
-		if (max_pq.size() >= min_pq.size())
-		{
-			max_pq.pop();
-		}
-		else
-		{
-			min_pq.pop();
-		}
-	}
-
-	size_t size()
-	{
-		return max_pq.size() + min_pq.size();
-	}
-
+    FMedianHeap() {}
+    ~FMedianHeap() = default;
+    
+    void Emplace(int Value)
+    {
+        if(!MinHeap.empty() && Value < MinHeap.top())
+        {
+            MaxHeap.emplace(Value);
+        }
+        else
+        {
+            MinHeap.emplace(Value);
+        }
+        
+        Heapify();
+    }
+    
+    int Top()
+    {
+        return MaxHeap.size() >= MinHeap.size() ? MaxHeap.top() : MinHeap.top();
+    }
+    
 private:
-	priority_queue<T> max_pq;
-	priority_queue<T, vector<T>, greater<>> min_pq;
-
-	void heapify()
-	{
-		if (max_pq.size() - min_pq.size() == 2)
-		{
-			T top = max_pq.top();
-			max_pq.pop();
-			min_pq.emplace(top);
-		}
-		else if(min_pq.size() - max_pq.size() == 2)
-		{
-			T top = min_pq.top();
-			min_pq.pop();
-			max_pq.emplace(top);
-		}
-	}
+    priority_queue<int, vector<int>, greater<>> MinHeap;  // 중앙값보다 큰 것들만 들어감
+    priority_queue<int> MaxHeap;  // 중앙값보다 작거나 같은 것들만 들어감
+    
+    void Heapify()
+    {
+        if(MaxHeap.size() - MinHeap.size() == 2)
+        {
+            MinHeap.emplace(MaxHeap.top());
+            MaxHeap.pop();
+        }
+        else if(MinHeap.size() - MaxHeap.size() == 2)
+        {
+            MaxHeap.emplace(MinHeap.top());
+            MinHeap.pop();
+        }
+    }
 };
 
-int main() 
+int main()
 {
-	ios_base::sync_with_stdio(false);
-	cin.tie(nullptr);
-	cout.tie(nullptr);
+    cin.tie(nullptr)->sync_with_stdio(false);
 
-	int N;
-	cin >> N;
-
-	MedianPriorityQueue<int> mpq;
-	int n;
-
-	while (N--)
-	{
-		cin >> n;
-		mpq.push(n);
-		cout << mpq.top() << "\n";
-	}
-	return 0;
+    auto MedianHeap = make_unique<FMedianHeap>();
+    
+    int N; cin >> N;
+    while(N--)
+    {
+        int Num; cin >> Num;
+        MedianHeap->Emplace(Num);
+        cout << MedianHeap->Top() << "\n";
+    }
+    
+    return 0;
 }
