@@ -1,6 +1,5 @@
 #include <iostream>
 #include <set>
-#include <memory>
 
 using namespace std;
 
@@ -134,7 +133,7 @@ int main()
 {
     cin.tie(nullptr)->sync_with_stdio(false);
     
-    auto DB = make_unique<Database>();
+    auto DB = new Database();
     
     int N; cin >> N;
     while(N--)
@@ -173,6 +172,8 @@ int main()
             DB->Solved(P);
         }
     }
+    
+    delete DB;
     
     return 0;
 }
