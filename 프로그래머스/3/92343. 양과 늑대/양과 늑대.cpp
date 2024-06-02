@@ -1,57 +1,62 @@
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <functional>
-#include <unordered_set>
 
 using namespace std;
 
-int solution(vector<int> Info, vector<vector<int>> Edges)
+int solution(vector<int> Info, vector<vector<int>> Edges) 
 {
-    const size_t N = Info.size();
+    enum EInfo
+    {
+        Sheep = 0,
+        Wolf = 1,
+        Checked = 2
+    };
     
-    vector<vector<int>> Graph(N);
+    const int N = Info.size();
+
+    vector<vector<int>> Tree(N);
     for(const auto& Edge : Edges)
     {
-        Graph[Edge[0]].emplace_back(Edge[1]);
-        //Graph[Edge[1]].emplace_back(Edge[0]);
+        Tree[Edge[0]].emplace_back(Edge[1]);
+        Tree[Edge[1]].emplace_back(Edge[0]);
     }
-    vector<bool> Visited(1 << N, false);  // 2^N 개수만큼
     
-    vector<int> Parents(N);
-    function<void(int, int)> FindParent = [&](int Begin, int End)
-    {
-        for(int Dst: Graph[Begin])
-        {
-            if(Dst == End) continue;
-            
-            Parents[Dst] = Begin;
-            FindParent(Dst, Begin);
-        }
-    }; FindParent(0, -1);
+    vector<vector<vector<bool>>> Visited(N, vector(N + 1, vector(N + 1, false)));
+    Visited[0][1][0] = true;
+    Info[0] = EInfo::Checked;
     
     int Answer = 0;
-    function<void(int, int, int)> DFS = [&](int Mask, int Sheep, int Wolf)
+    function<void(int, int, int)> Backtracking = [&](int Src, int Sheep, int Wolf)
     {
-        Visited[Mask] = true;
         Answer = max(Answer, Sheep);
-        
-        for(int Src = 0; Src < N; ++Src)
+        for(int Dst : Tree[Src])
         {
-            if(~Mask >> Src & 1) continue;
-            
-            for(int Dst : Graph[Src])
+            if(Info[Dst] == EInfo::Sheep && !Visited[Dst][Sheep + 1][Wolf])
             {
-                if(Dst == Parents[Src] || Mask >> Dst & 1) continue;
-                
-                int NextMask = Mask | (1 << Dst);
-                if(Visited[NextMask]) continue;
-                
-                if(Sheep + (Info[Dst] == 0) <= Wolf + (Info[Dst] == 1)) continue;
-                
-                DFS(NextMask, Sheep + (Info[Dst] == 0), Wolf + (Info[Dst] == 1));
+                Visited[Dst][Sheep + 1][Wolf] = true;
+                Info[Dst] = EInfo::Checked;
+                Backtracking(Dst, Sheep + 1, Wolf);
+                Info[Dst] = EInfo::Sheep;
+                Visited[Dst][Sheep + 1][Wolf] = false;
+            }
+            else if(Info[Dst] == EInfo::Wolf && Sheep > Wolf + 1 && !Visited[Dst][Sheep][Wolf + 1])
+            {
+                Visited[Dst][Sheep][Wolf + 1] = true;
+                Info[Dst] = EInfo::Checked;
+                Backtracking(Dst, Sheep, Wolf + 1);
+                Info[Dst] = EInfo::Wolf;
+                Visited[Dst][Sheep][Wolf + 1] = false;
+            }
+            else if(Info[Dst] == EInfo::Checked && !Visited[Dst][Sheep][Wolf])
+            {
+                Visited[Dst][Sheep][Wolf] = true;
+                Backtracking(Dst, Sheep, Wolf);
+                Visited[Dst][Sheep][Wolf] = false;
             }
         }
-    }; DFS(1, 1, 0);
+    }; Backtracking(0, 1, 0);
     
     return Answer;
 }
