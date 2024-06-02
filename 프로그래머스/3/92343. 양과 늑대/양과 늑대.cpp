@@ -1,50 +1,57 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <unordered_set>
 
 using namespace std;
 
 int solution(vector<int> Info, vector<vector<int>> Edges)
 {
-    const int N = Info.size();
+    const size_t N = Info.size();
     
-    vector<bool> Visited(1 << N, false);
     vector<vector<int>> Graph(N);
-    
     for(const auto& Edge : Edges)
     {
         Graph[Edge[0]].emplace_back(Edge[1]);
+        //Graph[Edge[1]].emplace_back(Edge[0]);
     }
+    vector<bool> Visited(1 << N, false);  // 2^N 개수만큼
+    
+    vector<int> Parents(N);
+    function<void(int, int)> FindParent = [&](int Begin, int End)
+    {
+        for(int Dst: Graph[Begin])
+        {
+            if(Dst == End) continue;
+            
+            Parents[Dst] = Begin;
+            FindParent(Dst, Begin);
+        }
+    }; FindParent(0, -1);
     
     int Answer = 0;
-    function<void(int)> DFS = [&](int Mask)
+    function<void(int, int, int)> DFS = [&](int Mask, int Sheep, int Wolf)
     {
-        if(Visited[Mask]) return;
-        
         Visited[Mask] = true;
-        int Sheep = 0, Wolf = 0;
-        for(int Node = 0; Node < N; ++Node)
-        {
-            if(Mask & (1 << Node))
-            {
-                Sheep += (Info[Node] == 0);
-                Wolf += (Info[Node] == 1);
-            }
-        }
-        
-        if(Sheep <= Wolf) return;
-        
         Answer = max(Answer, Sheep);
-        for(int Parent = 0; Parent < N; ++Parent)
+        
+        for(int Src = 0; Src < N; ++Src)
         {
-            if(!(Mask & (1 << Parent))) continue;
+            if(~Mask >> Src & 1) continue;
             
-            for(int Child : Graph[Parent])
+            for(int Dst : Graph[Src])
             {
-                DFS(Mask | (1 << Child));
+                if(Dst == Parents[Src] || Mask >> Dst & 1) continue;
+                
+                int NextMask = Mask | (1 << Dst);
+                if(Visited[NextMask]) continue;
+                
+                if(Sheep + (Info[Dst] == 0) <= Wolf + (Info[Dst] == 1)) continue;
+                
+                DFS(NextMask, Sheep + (Info[Dst] == 0), Wolf + (Info[Dst] == 1));
             }
         }
-    }; DFS(1);
+    }; DFS(1, 1, 0);
     
     return Answer;
 }
