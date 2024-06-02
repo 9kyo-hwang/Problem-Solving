@@ -40,7 +40,7 @@ tuple<int, int, int, int> FeeParser(const vector<int>& InFees)
 
 vector<int> solution(vector<int> InFees, vector<string> InRecords) 
 {
-    unordered_map<string, int> EntryMap, ParkingMap;
+    map<string, int> EntryMap, ParkingMap;
     for(const string& Record : InRecords)
     {
         const auto& [Time, License, History] = RecordParser(Record);
@@ -61,24 +61,16 @@ vector<int> solution(vector<int> InFees, vector<string> InRecords)
         ParkingMap[License] += LAST_EXIT - EntryTime;
     }
     
-    const auto& [DefaultTime, DefaultFee, UnitTime, UnitFee] = FeeParser(InFees);
-    map<string, int> FeeMap;
-    
+    const auto& [BaseTime, BaseFee, UnitTime, UnitFee] = FeeParser(InFees);
+    vector<int> Answer(ParkingMap.size(), BaseFee);
+    int Index = 0;
     for(auto& [License, Time] : ParkingMap)
     {
-        if(FeeMap.find(License) == FeeMap.end())
+        if(Time > BaseTime)
         {
-            FeeMap[License] = DefaultFee;
-            Time = clamp(Time - DefaultTime, 0, Time);
+            Answer[Index] += ceil((double)(Time - BaseTime) / (double)UnitTime) * UnitFee;
         }
-        
-        FeeMap[License] += ceil((double)Time / (double)UnitTime) * UnitFee;
-    }
-
-    vector<int> Answer;
-    for(const auto& [License, Fee] : FeeMap)
-    {
-        Answer.emplace_back(Fee);
+        ++Index;
     }
     return Answer;
 }
