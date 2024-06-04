@@ -8,18 +8,12 @@ vector<string> solution(int n, vector<int> Arr1, vector<int> Arr2)
     vector<string> Answer;
     for(int i = 0; i < n; ++i)
     {
-        int x1 = Arr1[i], x2 = Arr2[i];
+        int x = Arr1[i] | Arr2[i];
         string Decryption{};
         for(int j = 0; j < n; ++j)
         {
-            if(((x1 >> j) | (x2 >> j)) & 1)
-            {
-                Decryption += '#';
-            }
-            else
-            {
-                Decryption += ' ';
-            }
+            Decryption += (x & 1 ? '#' : ' ');
+            x >>= 1;
         }
         Answer.emplace_back(string(Decryption.rbegin(), Decryption.rend()));
     }
