@@ -3,17 +3,14 @@
 
 using namespace std;
 
-vector<string> solution(int n, vector<int> Arr1, vector<int> Arr2) 
-{
-    vector<string> Answer(n, "");
-    for(int i = 0; i < n; ++i)
-    {
-        int x = Arr1[i] | Arr2[i];
-        for(int j = 0; j < n; ++j)
-        {
-            Answer[i].insert(0, (x & 1 ? "#" : " "));
+vector<string> solution(int n, vector<int> arr1, vector<int> arr2) {
+    vector<string> answer(n, "");
+    for(int i = 0; i < n; ++i) {
+        int x = arr1[i] | arr2[i];
+        for(int j = 0; j < n; ++j) {
+            answer[i].insert(0, (x & 1 ? "#" : " "));
             x >>= 1;
         }
     }
-    return Answer;
+    return answer;
 }
