@@ -1,23 +1,15 @@
-from itertools import combinations
 input = open(0).readline
 
 N = int(input())
-table = [list(map(int, input().split())) for _ in range(N)]
-members = list(range(N))
+S = [list(map(int, input().split())) for _ in range(N)]
+S_row = [sum(row) for row in S]
+S_col = [sum(col) for col in zip(*S)]
 
-ans = float('inf')
-for start_members in combinations(members, N // 2):
-    start, link = 0, 0
-    link_members = list(set(members) - set(start_members))
+
+def dfs(idx: int = 0, cnt: int = 0, diff: int = sum(map(sum, S))) -> int:
+    if idx >= N: return float('inf')
+    if cnt == N // 2: return abs(diff)
+    return min(dfs(idx + 1, cnt, diff), dfs(idx + 1, cnt + 1, diff - S_row[idx] - S_col[idx]))
     
-    for m1, m2 in combinations(start_members, 2):
-        start += table[m1][m2]
-        start += table[m2][m1]
     
-    for m1, m2 in combinations(link_members, 2):
-        link += table[m1][m2]
-        link += table[m2][m1]
-        
-    ans = min(ans, abs(start - link))
-    
-print(ans)
+print(dfs())
