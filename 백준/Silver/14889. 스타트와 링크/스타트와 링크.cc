@@ -19,31 +19,33 @@ int main()
         }
     }
     
-    vector<bool> Selected(N / 2, false);
-    Selected.insert(Selected.end(), N / 2, true);
-    
     int Answer = 40001;
-    do
+    vector<int> Start, Link;
+    for(int Comb = N / 2; Comb < (1 << N); ++Comb)
     {
-        int Start = 0, Link = 0;
-        for(int i = 0; i < N - 1; ++i)
+        if(__builtin_popcount(Comb) != (N >> 1)) continue;
+        
+        Start.clear();
+        Link.clear();
+        
+        for(int i = 0; i < N; ++i)
         {
-            for(int j = i + 1; j < N; ++j)
+            Comb & (1 << i) ? Start.emplace_back(i) : Link.emplace_back(i);
+        }
+        
+        int StartScore = 0, LinkScore = 0;
+        for(int i = 0; i < N / 2; ++i)
+        {
+            for(int j = 0; j < N / 2; ++j)
             {
-                if(Selected[i] && Selected[j])
-                {
-                    Start += Table[i][j] + Table[j][i];
-                }
-                if(!Selected[i] && !Selected[j])
-                {
-                    Link += Table[i][j] + Table[j][i];
-                }
+                if(i == j) continue;
+                StartScore += Table[Start[i]][Start[j]];
+                LinkScore += Table[Link[i]][Link[j]];
             }
         }
-        Answer = min(Answer, abs(Start - Link));
-    } while(next_permutation(Selected.begin(), Selected.end()));
+        
+        Answer = min(Answer, abs(StartScore - LinkScore));
+    }
     
     cout << Answer;
-    
-    return 0;
 }
