@@ -1,23 +1,48 @@
-from itertools import combinations
-input = open(0).readline
+import sys
+import itertools
 
-N = int(input())
-table = [list(map(int, input().split())) for _ in range(N)]
-members = list(range(N))
+input = sys.stdin.read
 
-ans = float('inf')
-for start_members in combinations(members, N // 2):
-    start, link = 0, 0
-    link_members = list(set(members) - set(start_members))
+def main():
+    data = input().split()
+    idx = 0
+    N = int(data[idx])
+    idx += 1
     
-    for m1, m2 in combinations(start_members, 2):
-        start += table[m1][m2]
-        start += table[m2][m1]
+    Table = []
+    for _ in range(N):
+        Table.append([int(data[idx + i]) for i in range(N)])
+        idx += N
+
+    Answer = 40001
+    half_N = N // 2
+    total_comb = 1 << N
     
-    for m1, m2 in combinations(link_members, 2):
-        link += table[m1][m2]
-        link += table[m2][m1]
+    memo = {}
+    
+    def team_score(team):
+        if team in memo:
+            return memo[team]
+        score = 0
+        for i in range(half_N):
+            for j in range(i + 1, half_N):
+                score += Table[team[i]][team[j]] + Table[team[j]][team[i]]
+        memo[team] = score
+        return score
+    
+    for comb in range(1, total_comb):
+        if bin(comb).count('1') != half_N:
+            continue
         
-    ans = min(ans, abs(start - link))
+        Start = [i for i in range(N) if comb & (1 << i)]
+        Link = [i for i in range(N) if not comb & (1 << i)]
+        
+        StartScore = team_score(tuple(Start))
+        LinkScore = team_score(tuple(Link))
+        
+        Answer = min(Answer, abs(StartScore - LinkScore))
     
-print(ans)
+    print(Answer)
+
+if __name__ == "__main__":
+    main()
